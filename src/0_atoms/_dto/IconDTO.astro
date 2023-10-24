@@ -2,6 +2,7 @@
 import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
 import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
 import Icon from '../Icon.astro';
+import { paddingGuard, type PaddingX } from '../../tailwind/types/Padding';
 
 export interface StoryblokIconDTO extends SbBlokData {
     component: "icon";
@@ -10,13 +11,14 @@ export interface StoryblokIconDTO extends SbBlokData {
         icon: string;
     };
     type?: any;
+    padding_x?: any;
 }
 
 const blokType = ['icon', 'primary-lg'] as const;
 type BlokType = (typeof blokType)[number];
 const isType = (x: any): x is BlokType => blokType.includes(x);
 
-export interface StoryblokIcon extends StoryblokEditableData {
+export interface StoryblokIcon extends StoryblokEditableData, PaddingX {
     icon: {
         type: string;
         icon: string;
@@ -34,6 +36,7 @@ const icon: StoryblokIcon = {
     icon: blok.icon,
     type: (isType(blok.type) ? blok.type : 'icon'),
     storyblokData: storyblokEditable(blok),
+    padding_x: paddingGuard(blok.padding_x),
 };
 ---
 
