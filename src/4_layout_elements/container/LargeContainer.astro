@@ -1,0 +1,14 @@
+---
+import { type StoryblokContainer } from '../_dto/ContainerDTO.astro';
+
+interface Props {
+    blok: StoryblokContainer;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+<div class:list={["mx-auto sm:max-w-2xl lg:max-w-7xl", className]} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}>
+    <slot />
+</div>

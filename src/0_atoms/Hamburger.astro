@@ -1,0 +1,21 @@
+---
+import HamburgerSvelte from './hamburger/Hamburger.svelte';
+import { getClassName, getVisibilityClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokHamburger } from './_dto/HamburgerDTO.astro';
+
+interface Props {
+    blok: StoryblokHamburger;
+}
+
+const { blok } = Astro.props;
+
+const className = getClassName(blok, {
+    decorators: [
+        {decorator: getVisibilityClasses}
+    ]
+});
+---
+
+{blok.type == 'hamburger' ?
+    <HamburgerSvelte className={className} storyblokEditableData={blok.storyblokData} ariaControls={blok.aria_controls} client:idle />
+: null}

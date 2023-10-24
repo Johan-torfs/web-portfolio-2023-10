@@ -1,0 +1,60 @@
+---
+import DefaultInput from './input/DefaultInput.svelte';
+import RadioInput from './input/RadioInput.svelte';
+
+import { getClassName, getPaddingXClasses, getPaddingYClasses, getBorderRadiusClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokInput } from './_dto/InputDTO.astro';
+import TextAreaInput from './input/TextAreaInput.svelte';
+
+interface Props {
+    blok: StoryblokInput;
+}
+
+const { blok } = Astro.props;
+
+const className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+        {decorator: getBorderRadiusClasses},
+    ]
+});
+---
+
+{blok.type == "text" ? (
+    <DefaultInput
+        className={className}
+        blok={{name: blok.name, value: blok.value, label: blok.label, placeholder: blok.placeholder}}
+        storyblokEditableData={blok.storyblokData}
+        type="text"
+        client:idle
+    />
+) : null}
+
+{blok.type == "email" ? (
+    <DefaultInput
+        className={className}
+        blok={{name: blok.name, value: blok.value, label: blok.label, placeholder: blok.placeholder}}
+        storyblokEditableData={blok.storyblokData}
+        type="email"
+        client:idle
+    />
+) : null}
+
+{blok.type == "text-area" ? (
+    <TextAreaInput
+        className={className}
+        blok={{name: blok.name, value: blok.value, label: blok.label, placeholder: blok.placeholder}}
+        storyblokEditableData={blok.storyblokData}
+        client:idle
+    />
+) : null}
+
+{blok.type == "radio" ? (
+    <RadioInput
+        className={className}
+        blok={{name: blok.name, value: blok.value, label: blok.label}}
+        storyblokEditableData={blok.storyblokData}
+        client:idle
+    />
+) : null}

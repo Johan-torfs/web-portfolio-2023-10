@@ -1,0 +1,15 @@
+---
+import type { StoryblokText } from '../_dto/TextDTO.astro';
+import TextSvelte from './Text.svelte';
+
+interface Props {
+    blok: StoryblokText;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+
+const htmlWithClass = blok.text.replace(/<p>/g, `<p class="${className}" data-blok-c='${blok.storyblokData?.['data-blok-c']}' data-blok-uid='${blok.storyblokData?.['data-blok-uid']}' interactive='${!!blok.interactive}'>`);
+---
+
+{blok.interactive ? <TextSvelte htmlWithClass={htmlWithClass} client:visible/> : <Fragment set:html={htmlWithClass} class=" max"/>}

@@ -1,0 +1,34 @@
+---
+export const prerender = false;
+
+import { useStoryblokApi, type SbBlokData } from '@storyblok/astro'
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const storyblokApi = useStoryblokApi()        
+const response = await storyblokApi.get('cdn/stories/404-page', {
+    version: import.meta.env.PUBLIC_VERCEL_ENV == 'production' ? 'published' : 'draft',
+}).then((response: any ) => {      
+    return response;
+}).catch((error: any) => {
+    const jsonError = JSON.parse(error);
+    return jsonError;
+});
+
+const blok = response.data?.story.content || {header: [], content: []};
+---
+
+<BaseLayout>
+    <Fragment slot-name="header">
+        {blok.header?.map((blok: SbBlokData) => {            
+            return <StoryblokComponent blok={blok} />
+        })}
+    </Fragment>
+    {blok.content?.map((blok: SbBlokData) => {            
+        return <StoryblokComponent blok={blok} />
+    })}
+    {blok.header?.length + blok.content?.length == 0 ?
+        <StoryblokComponent blok={{component: 'section', content: [{component: 'container', content: [{component: 'title', title: '404 Page not found', html_tag: 'h1'}, {component: 'button', text: 'Back to Home', link: {cached_url: '/'}}]}], padding_y: {xs: 24}}} />
+    : null}
+</BaseLayout>

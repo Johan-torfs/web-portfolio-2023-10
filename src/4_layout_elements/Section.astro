@@ -1,0 +1,46 @@
+---
+import { getClassName, getPaddingXClasses, getPaddingYClasses, getMarginXClasses, getMarginYClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokSection } from './_dto/SectionDTO.astro';
+import DefaultSection from './section/DefaultSection.astro';
+import FooterSection from './section/FooterSection.astro';
+import HeaderSection from './section/HeaderSection.astro';
+import DivSection from './section/DivSection.astro';
+
+interface Props {
+    blok: StoryblokSection;
+}
+
+const { blok } = Astro.props;
+
+const className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+        {decorator: getMarginXClasses},
+        {decorator: getMarginYClasses},
+    ]
+})
+---
+
+{blok.type == 'section' ?
+    <DefaultSection blok={blok} className={className}>
+        <slot />
+    </DefaultSection>
+: null}
+
+{blok.type === 'footer' ?
+    <FooterSection blok={blok} className={className}>
+        <slot />
+    </FooterSection>
+: null}
+
+{blok.type === 'header' ?
+    <HeaderSection blok={blok} className={className}>
+        <slot />
+    </HeaderSection>
+: null}
+{blok.type === 'div' ?
+    <DivSection blok={blok} className={className}>
+        <slot />
+    </DivSection>
+: null}

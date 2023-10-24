@@ -1,0 +1,25 @@
+---
+import { getClassName, getColSpanClasses, getPaddingXClasses, getPaddingYClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokColumn } from './_dto/ColumnDTO.astro';
+import DefaultColumn from './column/DefaultColumn.astro'
+
+interface Props {
+    blok: StoryblokColumn;
+}
+
+const { blok } = Astro.props;
+
+var className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+        {decorator: getColSpanClasses},
+    ]
+})
+---
+
+{blok.type == "column" ?
+    <DefaultColumn blok={blok} className={className}>
+        <slot />
+    </DefaultColumn>
+: null}

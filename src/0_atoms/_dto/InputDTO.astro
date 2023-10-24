@@ -1,0 +1,53 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import Input from '../Input.astro';
+import { borderRadiusSizeGuard, type BorderRadius, borderRadiusPositionGuard } from '../../tailwind/types/Border';
+import { paddingGuard, type PaddingX, type PaddingY } from '../../tailwind/types/Padding';
+
+export interface StoryblokInputDTO extends SbBlokData {
+    component: "input";
+    name: string;
+    value: string;
+    label: string;
+    placeholder: string;
+    type: any;
+    padding_x?: any,
+    padding_y?: any,
+    border_radius_size?: any,
+    border_radius_position?: any,
+}
+
+const blokType = ['text', 'radio', 'email', 'text-area'] as const; // "text", "email", "password", "number", "tel", "url", "search", "date", "time", "datetime-local", "month", "week", "color", "radio", "checkbox", "file", "image", "range", "hidden"
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokInput extends StoryblokEditableData, PaddingX, PaddingY, BorderRadius {
+    name: string;
+    value: string;
+    label: string;
+    type: BlokType, 
+    placeholder: string;
+}
+
+interface Props {
+    blok: StoryblokInputDTO;
+}
+
+const { blok } = Astro.props;
+
+const title: StoryblokInput = {
+    name: blok.name,
+    value: blok.value,
+    label: blok.label,
+    placeholder: blok.placeholder,
+    type: (isType(blok.type) ? blok.type : 'text'),
+    storyblokData: storyblokEditable(blok),
+    padding_x: paddingGuard(blok.padding_x),
+    padding_y: paddingGuard(blok.padding_y),
+    border_radius_size: borderRadiusSizeGuard(blok.border_radius_size),
+    border_radius_position: borderRadiusPositionGuard(blok.border_radius_position),
+};
+---
+
+<Input blok={title} />

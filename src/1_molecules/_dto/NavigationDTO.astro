@@ -1,0 +1,64 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import type { PaddingX, PaddingY } from '../../tailwind/types/Padding';
+import { paddingGuard } from '../../tailwind/types/Padding';
+import type { MarginX, MarginY } from '../../tailwind/types/Margin';
+import { marginGuard } from '../../tailwind/types/Margin';
+import Navigation from '../Navigation.astro';
+
+export interface StoryblokNavigationDTO extends SbBlokData {
+    component: 'navigation',
+    desktop: SbBlokData[],
+    mobile: SbBlokData[],
+    mobile_menu: SbBlokData[],
+    type: any,
+    padding_x?: any,
+    padding_y?: any,
+    margin_x?: any,
+    margin_y?: any,
+}
+
+const blokType = ['navigation'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokNavigation extends StoryblokEditableData, PaddingX, PaddingY, MarginX, MarginY {
+    type: BlokType,
+}
+
+interface Props {
+    blok: StoryblokNavigationDTO;
+}
+
+const { blok } = Astro.props;
+
+const navigation: StoryblokNavigation = {
+    type: (isType(blok.type) ? blok.type : 'navigation'),
+    storyblokData: storyblokEditable(blok),
+    padding_x: paddingGuard(blok.padding_x),
+    padding_y: paddingGuard(blok.padding_y),
+    margin_x: marginGuard(blok.margin_x),
+    margin_y: marginGuard(blok.margin_y),
+};
+---
+
+<Navigation blok={navigation}>
+    <Fragment slot="desktop">
+        {blok.desktop.map(item => {            
+            return <StoryblokComponent blok={item} />
+        })}
+    </Fragment>
+    <Fragment slot="mobile">
+        {blok.mobile.map(item => {            
+            return <StoryblokComponent blok={item} />
+        })}
+    </Fragment>
+    <Fragment slot="mobile-menu">
+        {blok.mobile_menu.map(item => {            
+            return <StoryblokComponent blok={item} />
+        })}
+    </Fragment>
+</Navigation>

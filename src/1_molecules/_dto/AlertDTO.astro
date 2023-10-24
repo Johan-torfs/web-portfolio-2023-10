@@ -1,0 +1,54 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+
+import Alert from '../Alert.astro';
+import { borderRadiusPositionGuard, borderRadiusSizeGuard, type BorderRadius } from '../../tailwind/types/Border';
+import { paddingGuard, type PaddingX, type PaddingY } from '../../tailwind/types/Padding';
+import { visibilityGuard, type Visibility } from '../../tailwind/types/Visibility';
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+
+export interface StoryblokAlertDTO extends SbBlokData {
+    component: 'alert',
+    content: SbBlokData[],
+    type: any,
+    padding_x: any,
+    padding_y: any,
+    border_radius_size: any,
+    border_radius_position: any,
+    from: any,
+    to: any,
+}
+
+const blokType = ['primary', 'danger', 'warning', 'info', 'success'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokAlert extends StoryblokEditableData, PaddingX, PaddingY, BorderRadius, Visibility {
+    type: BlokType,
+}
+
+interface Props {
+    blok: StoryblokAlertDTO;
+}
+
+const { blok } = Astro.props;
+
+const alert: StoryblokAlert = {
+    type: (isType(blok.type) ? blok.type : 'primary'),
+    storyblokData: storyblokEditable(blok),
+    padding_x: paddingGuard(blok.padding_x),
+    padding_y: paddingGuard(blok.padding_y),
+    border_radius_size: borderRadiusSizeGuard(blok.border_radius_size),
+    border_radius_position: borderRadiusPositionGuard(blok.border_radius_position),
+    from: visibilityGuard(blok.from),
+    to: visibilityGuard(blok.to),
+};
+---
+
+<Alert blok={alert}>
+    {blok.content.map(item => {            
+        return <StoryblokComponent blok={item} />
+    })}
+</Alert>

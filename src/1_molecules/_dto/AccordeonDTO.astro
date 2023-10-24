@@ -1,0 +1,55 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+
+import Accordeon from '../Accordeon.astro';
+import { paddingGuard, type PaddingX, type PaddingY } from '../../tailwind/types/Padding';
+import type { Visibility } from '../../tailwind/types/Visibility';
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+
+export interface StoryblokAccordeonDTO extends SbBlokData {
+    component: 'accordeon',
+    title: SbBlokData[],
+    content: SbBlokData[],
+    type: any,
+    padding_x: any,
+    padding_y: any,
+    from: any,
+    to: any,
+}
+
+const blokType = ['primary-card-accordion'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokAccordeon extends StoryblokEditableData, PaddingX, PaddingY, Visibility {
+    type: BlokType,
+}
+
+interface Props {
+    blok: StoryblokAccordeonDTO;
+}
+
+const { blok } = Astro.props;
+
+const accordeon: StoryblokAccordeon = {
+    type: (isType(blok.type) ? blok.type : 'primary-card-accordion'),
+    storyblokData: storyblokEditable(blok),
+    padding_x: paddingGuard(blok.padding_x),
+    padding_y: paddingGuard(blok.padding_y),
+};
+---
+
+<Accordeon blok={accordeon}>
+    <Fragment slot="title">
+        {blok.title.map(item => {            
+            return <StoryblokComponent blok={item} />
+        })}
+    </Fragment>
+    <Fragment slot="content">
+        {blok.content.map(item => {            
+            return <StoryblokComponent blok={item} />
+        })}
+    </Fragment>
+</Accordeon>

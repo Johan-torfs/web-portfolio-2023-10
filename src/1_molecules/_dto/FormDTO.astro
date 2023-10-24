@@ -1,0 +1,129 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import type { PaddingX, PaddingY } from '../../tailwind/types/Padding';
+import { paddingGuard } from '../../tailwind/types/Padding';
+import type { MarginX, MarginY } from '../../tailwind/types/Margin';
+import { marginGuard } from '../../tailwind/types/Margin';
+import Form from '../Form.astro';
+
+export interface StoryblokFormDTO extends SbBlokData {
+    component: 'form',
+    states: StoryblokFormStateDTO[],
+    type: any,
+    padding_x?: any,
+    padding_y?: any,
+    margin_x?: any,
+    margin_y?: any,
+}
+
+const blokTypeForm = ['rating'] as const;
+type BlokTypeForm = (typeof blokTypeForm)[number];
+const isTypeForm = (x: any): x is BlokTypeForm => blokTypeForm.includes(x);
+
+export interface StoryblokForm extends StoryblokEditableData, PaddingX, PaddingY, MarginX, MarginY {
+    type: BlokTypeForm,
+    states: string[],
+}
+
+export interface StoryblokFormStateDTO extends SbBlokData {
+    component: 'form_state',
+    content: SbBlokData[],
+    type: any,
+}
+
+const blokTypeFormState = ["intermediate", "final", "post-submit"] as const;
+type BlokTypeFormState = (typeof blokTypeFormState)[number];
+const isTypeFormState = (x: any): x is BlokTypeFormState => blokTypeFormState.includes(x);
+
+interface Props {
+    blok: StoryblokFormDTO;
+}
+
+const { blok } = Astro.props;
+
+const form: StoryblokForm = {
+    type: (isTypeForm(blok.type) ? blok.type : 'rating'),
+    states: blok.states.map((state) => isTypeFormState(state.type) ? state.type : 'intermediate'),
+    storyblokData: storyblokEditable(blok),
+    padding_x: paddingGuard(blok.padding_x),
+    padding_y: paddingGuard(blok.padding_y),
+    margin_x: marginGuard(blok.margin_x),
+    margin_y: marginGuard(blok.margin_y),
+};
+---
+
+<Form blok={form}>
+    {blok.states[0] ? () => {   
+        return <div slot="name-0">
+            {blok.states[0].content.map(item => {            
+                return <StoryblokComponent blok={item} />
+            })}
+        </div>
+    } : null}
+    {blok.states[1] ? () => {   
+        return <div slot="name-1">
+            {blok.states[1].content.map(item => {            
+                return <StoryblokComponent blok={item} />
+            })}
+        </div>
+    } : null}
+    {blok.states[2] ? () => {   
+        return <div slot="name-2">
+            {blok.states[2].content.map(item => {            
+                return <StoryblokComponent blok={item} />
+            })}
+        </div>
+    } : null}
+    {blok.states[3] ? () => {   
+        return <div slot="name-3">
+            {blok.states[3].content.map(item => {            
+                return <StoryblokComponent blok={item} />
+            })}
+        </div>
+    } : null}
+    {blok.states[4] ? () => {   
+        return <div slot="name-4">
+            {blok.states[4].content.map(item => {            
+                return <StoryblokComponent blok={item} />
+            })}
+        </div>
+    } : null}
+    {blok.states[5] ? () => {   
+        return <div slot="name-5">
+            {blok.states[5].content.map(item => {            
+                return <StoryblokComponent blok={item} />
+            })}
+        </div>
+    } : null}
+    {blok.states[6] ? () => {   
+        return <div slot="name-6">
+            {blok.states[6].content.map(item => {            
+                return <StoryblokComponent blok={item} />
+            })}
+        </div>
+    } : null}
+    {blok.states[7] ? () => {   
+        return <div slot="name-7">
+            {blok.states[7].content.map(item => {            
+                return <StoryblokComponent blok={item} />
+            })}
+        </div>
+    } : null}
+    {blok.states[8] ? () => {   
+        return <div slot="name-8">
+            {blok.states[8].content.map(item => {            
+                return <StoryblokComponent blok={item} />
+            })}
+        </div>
+    } : null}
+    {blok.states[9] ? () => {   
+        return <div slot="name-9">
+            {blok.states[9].content.map(item => {            
+                return <StoryblokComponent blok={item} />
+            })}
+        </div>
+    } : null}
+</Form>

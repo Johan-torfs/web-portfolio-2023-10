@@ -1,0 +1,40 @@
+---
+import PrimaryCard from './card/PrimaryCard.astro';
+import TransparentCard from './card/TransparentCard.astro';
+import BorderPrimaryCard from './card/BorderPrimaryCard.astro';
+import type { StoryblokCard } from './_dto/CardDTO.astro';
+import { getClassName, getPaddingXClasses, getPaddingYClasses, getBorderRadiusClasses, getVisibilityClasses } from '../tailwind/class_name_compiler';
+
+interface Props {
+    blok: StoryblokCard;
+}
+
+const { blok } = Astro.props;
+
+var className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+        {decorator: getBorderRadiusClasses},
+        {decorator: getVisibilityClasses, options: {display: 'grid'}}
+    ]
+});
+---
+
+{blok.type == 'primary-card' ? (
+    <PrimaryCard blok={blok} className={className}>
+        <slot />    
+    </PrimaryCard>
+) : null }
+
+{blok.type == 'transparent-card' ? (
+    <TransparentCard blok={blok} className={className}>
+        <slot /> 
+    </TransparentCard>
+) : null }
+
+{blok.type == 'border-primary-card' ? (
+    <BorderPrimaryCard blok={blok} className={className}>
+        <slot /> 
+    </BorderPrimaryCard>
+) : null }

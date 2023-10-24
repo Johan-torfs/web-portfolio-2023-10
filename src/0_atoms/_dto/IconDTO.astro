@@ -1,0 +1,40 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import Icon from '../Icon.astro';
+
+export interface StoryblokIconDTO extends SbBlokData {
+    component: "icon";
+    icon: {
+        type: string;
+        icon: string;
+    };
+    type?: any;
+}
+
+const blokType = ['icon', 'primary-lg'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokIcon extends StoryblokEditableData {
+    icon: {
+        type: string;
+        icon: string;
+    };
+    type: BlokType, 
+}
+
+interface Props {
+    blok: StoryblokIconDTO;
+}
+
+const { blok } = Astro.props;
+
+const icon: StoryblokIcon = {
+    icon: blok.icon,
+    type: (isType(blok.type) ? blok.type : 'icon'),
+    storyblokData: storyblokEditable(blok),
+};
+---
+
+<Icon blok={icon} />

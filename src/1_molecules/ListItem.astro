@@ -1,0 +1,23 @@
+---
+import { getClassName, getMarginBottomClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokListItem } from './_dto/ListItemDTO.astro';
+import DefaultListItem from './list_item/DefaultListItem.astro';
+
+interface Props {
+    blok: StoryblokListItem;
+}
+
+const { blok } = Astro.props;
+
+const className = getClassName(blok, {
+    decorators: [
+        {decorator: getMarginBottomClasses},
+    ]
+});
+---
+
+{blok.type == 'list_item' ? 
+<DefaultListItem blok={blok} className={className}>
+    <slot />
+</DefaultListItem>
+: null}

@@ -1,0 +1,34 @@
+---
+import PrimaryCardAccordeon from './accordeon/PrimaryCardAccordeon.svelte';
+import type { StoryblokAccordeon } from './_dto/AccordeonDTO.astro';
+import { getClassName, getPaddingXClasses, getPaddingYClasses, getVisibilityClasses } from '../tailwind/class_name_compiler';
+
+interface Props {
+    blok: StoryblokAccordeon;
+}
+
+const { blok } = Astro.props;
+
+const className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+        {decorator: getVisibilityClasses, options: {display: 'grid'}}
+    ]
+});
+---
+
+{blok.type == 'primary-card-accordion' ? (
+<PrimaryCardAccordeon 
+    className={className} 
+    storyblokEditableData={blok.storyblokData} 
+    client:idle
+>
+    <Fragment slot="title">
+        <slot name="title" />
+    </Fragment>
+    <Fragment slot="content">
+        <slot name="content" />
+    </Fragment>
+</PrimaryCardAccordeon>
+) : null }

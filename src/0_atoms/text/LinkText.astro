@@ -1,0 +1,15 @@
+---
+import type { StoryblokText } from '../_dto/TextDTO.astro';
+import TextSvelte from './Text.svelte';
+
+interface Props {
+    blok: StoryblokText;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+
+const htmlWithClass = blok.text.replace(/<p>/g, `<span class="${className + ' group-[.link]:group-hover:underline'}" data-blok-c='${blok.storyblokData?.['data-blok-c']}' data-blok-uid='${blok.storyblokData?.['data-blok-uid']}' interactive='${!!blok.interactive}'>`).replace(/<\/p>/g, '</span>');
+---
+
+<Fragment set:html={htmlWithClass} class=" max"/>

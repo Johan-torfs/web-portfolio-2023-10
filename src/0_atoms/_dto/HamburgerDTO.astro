@@ -1,0 +1,37 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import Hamburger from '../Hamburger.astro';
+import type { Visibility } from '../../tailwind/types/Visibility';
+
+export interface StoryblokHamburgerDTO extends SbBlokData {
+    component: "hamburger";
+    aria_controls: string;
+    type: any;
+    from: any,
+    to: any,
+}
+
+const blokType = ['hamburger'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokHamburger extends StoryblokEditableData, Visibility {
+    aria_controls: string;
+    type: BlokType, 
+}
+
+interface Props {
+    blok: StoryblokHamburgerDTO;
+}
+
+const { blok } = Astro.props;
+
+const hamburger: StoryblokHamburger = {
+    aria_controls: blok.aria_controls || 'page navigation',
+    type: (isType(blok.type) ? blok.type : 'hamburger'),
+    storyblokData: storyblokEditable(blok),
+};
+---
+
+<Hamburger blok={hamburger} />

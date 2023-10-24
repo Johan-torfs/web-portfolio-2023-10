@@ -1,0 +1,35 @@
+---
+import type { StoryblokImage } from '../_dto/ImageDTO.astro';
+
+interface Props {
+    blok: StoryblokImage;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+
+<Fragment>
+    <img 
+        data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}
+        src={blok.image.filename} 
+        alt={blok.image.alt} 
+        class:list={[className, 'image', {'dark:hidden': blok.image_dark?.id}]}
+    />
+    {blok.image_dark?.id && 
+        <img 
+            data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}
+            src={blok.image_dark.filename} 
+            alt={blok.image_dark.alt} 
+            class:list={[className, 'image', 'dark', {'hidden dark:block': true}]}
+        />
+    }
+</Fragment>
+
+<style define:vars={{height: blok.height ? blok.height + "px" : "auto", width: blok.width ? blok.width + "px" : "auto"}}>
+    .image {
+        max-height: var(--height);
+        width: var(--width);
+    }
+</style>

@@ -1,0 +1,24 @@
+---
+import PrimaryThemeButton from './theme_button/PrimaryThemeButton.astro';
+import { getClassName, getPaddingXClasses, getPaddingYClasses, getBorderRadiusClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokThemeButton } from './_dto/ThemeButtonDTO.astro';
+
+
+interface Props {
+    blok: StoryblokThemeButton;
+}
+
+const { blok } = Astro.props;
+
+var className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+        {decorator: getBorderRadiusClasses}
+    ]
+});
+---
+
+{blok.type == 'primary' ?
+    <PrimaryThemeButton className={className} blok={blok} />
+: null}

@@ -1,0 +1,26 @@
+---
+import { getClassName, getGapClasses, getPaddingXClasses, getPaddingYClasses, getAlignItemsClasses, getJustifyContentClasses, getMarginBottomClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokFlex } from './_dto/FlexDTO.astro';
+import DefaultFlex from './flex/DefaultFlex.astro';
+
+interface Props {
+    blok: StoryblokFlex;
+}
+
+const { blok } = Astro.props;
+
+var className = getClassName(blok, {
+    decorators: [
+        {decorator: getGapClasses},
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+        {decorator: getAlignItemsClasses},
+        {decorator: getJustifyContentClasses},
+        {decorator: getMarginBottomClasses},
+    ]
+})
+---
+
+<DefaultFlex blok={blok} className={className}>
+    <slot />
+</DefaultFlex>

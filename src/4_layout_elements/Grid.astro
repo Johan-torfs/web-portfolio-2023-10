@@ -1,0 +1,45 @@
+---
+import { getClassName, getGapClasses, getColumnsClasses, getPaddingXClasses, getPaddingYClasses, getAlignContentClasses, getAlignItemsClasses, getJustifyContentClasses, getJustifyItemsClasses, getVisibilityClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokGrid } from './_dto/GridDTO.astro';
+import DefaultGrid from './grid/DefaultGrid.astro';
+import DividersYGrid from './grid/DividersYGrid.astro';
+import DividersXGrid from './grid/DividersXGrid.astro';
+
+interface Props {
+    blok: StoryblokGrid;
+}
+
+const { blok } = Astro.props;
+
+var className = getClassName(blok, {
+    decorators: [
+        {decorator: getGapClasses},
+        {decorator: getColumnsClasses},
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+        {decorator: getAlignContentClasses},
+        {decorator: getAlignItemsClasses},
+        {decorator: getJustifyContentClasses},
+        {decorator: getJustifyItemsClasses},
+        {decorator: getVisibilityClasses},
+    ]
+});
+---
+
+{blok.type == 'grid' ? (
+    <DefaultGrid blok={blok} className={className}>
+        <slot />
+    </DefaultGrid>
+) : null}
+
+{blok.type == 'dividers' || blok.type == undefined ? (
+    <DividersYGrid blok={blok} className={className}>
+        <slot />
+    </DividersYGrid>
+) : null}
+
+{blok.type == 'divide-x-lg' ? (
+    <DividersXGrid blok={blok} className={className}>
+        <slot />
+    </DividersXGrid>
+) : null}

@@ -1,0 +1,19 @@
+---
+import type { StoryblokIcon } from './_dto/IconDTO.astro';
+import PrimaryIcon from './icon/PrimaryIcon.astro';
+import DefaultIcon from './icon/DefaultIcon.astro';
+
+interface Props {
+    blok: StoryblokIcon;
+}
+
+const { blok } = Astro.props;
+---
+
+{blok.type == 'icon' ?
+<DefaultIcon blok={blok} /> 
+: null}
+
+{blok.type == 'primary-lg' ?
+<PrimaryIcon blok={blok} /> 
+: null}

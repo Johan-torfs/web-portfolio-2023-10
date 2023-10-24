@@ -1,0 +1,14 @@
+---
+import type { StoryblokTitle } from '../_dto/TitleDTO.astro';
+
+interface Props {
+    blok: StoryblokTitle;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+<h5  class:list={[className]} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']} >
+    {blok.title}
+</h5>

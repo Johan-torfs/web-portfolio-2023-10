@@ -1,0 +1,14 @@
+---
+import type { StoryblokGrid } from '../_dto/GridDTO.astro';
+
+interface Props {
+    blok: StoryblokGrid;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+<div class:list={["grid divide-primary-900/10 dark:divide-primary-300/10 divide-y lg:divide-x lg:divide-y-0", className]} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']} >
+    <slot />
+</div>

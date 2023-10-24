@@ -1,0 +1,73 @@
+---
+import RatingForm from './forms/RatingForm.svelte';
+
+import { getClassName, getPaddingXClasses, getPaddingYClasses, getMarginXClasses, getMarginYClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokForm } from './_dto/FormDTO.astro';
+
+interface Props {
+    blok: StoryblokForm;
+}
+
+const { blok } = Astro.props;
+
+const className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+        {decorator: getMarginXClasses},
+        {decorator: getMarginYClasses},
+    ]
+});
+---
+
+{blok.states.length > 10 ? <div class="bg-red-500 text-white p-4">You can only have up to 10 states in a form</div> : null}
+
+{blok.type == "rating" ? 
+    <RatingForm 
+        className={className}
+        storyblokEditableData={blok.storyblokData}
+        states={blok.states}
+        client:idle
+    >
+        <Fragment slot="name-0">
+            <slot name="name-0" />
+        </Fragment>
+
+        <Fragment slot="name-1">
+            <slot name="name-1" />
+        </Fragment>
+
+        <Fragment slot="name-2">
+            <slot name="name-2" />
+        </Fragment>
+
+        <Fragment slot="name-3">
+            <slot name="name-3" />
+        </Fragment>
+
+        <Fragment slot="name-4">
+            <slot name="name-4" />
+        </Fragment>
+
+        <Fragment slot="name-5">
+            <slot name="name-5" />
+        </Fragment>
+
+        <Fragment slot="name-6">
+            <slot name="name-6" />
+        </Fragment>
+
+        <Fragment slot="name-7">
+            <slot name="name-7" />
+        </Fragment>
+
+        <Fragment slot="name-8">
+            <slot name="name-8" />
+        </Fragment>
+
+        <Fragment slot="name-9">
+            <slot name="name-9" />
+        </Fragment>    
+    </RatingForm> 
+    : null
+}

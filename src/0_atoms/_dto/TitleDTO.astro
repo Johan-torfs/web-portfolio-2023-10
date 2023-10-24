@@ -1,0 +1,46 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import type { TextCenter, TextSize, TextMaxWidth } from '../../tailwind/types/Text';
+import { textCenterGuard, textSizeGuard, textWidthGuard } from '../../tailwind/types/Text';
+import type { MarginBottom } from '../../tailwind/types/Margin';
+import { marginGuard } from '../../tailwind/types/Margin';
+import Title from '../Title.astro';
+
+export interface StoryblokTitleDTO extends SbBlokData {
+    component: 'title',
+    title: any,
+    type: any,
+    margin_bottom?: any,
+    font_size?: any,
+    text_center?: any,
+    max_width?: any,
+}
+
+const blokType = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokTitle extends StoryblokEditableData, MarginBottom, TextSize, TextCenter, TextMaxWidth {
+    title: string,
+    type: BlokType, 
+}
+
+interface Props {
+    blok: StoryblokTitleDTO;
+}
+
+const { blok } = Astro.props;
+
+const title: StoryblokTitle = {
+    title: blok.title,
+    type: (isType(blok.type) ? blok.type : 'h2'),
+    storyblokData: storyblokEditable(blok),
+    margin_bottom: marginGuard(blok.margin_bottom),
+    font_size: textSizeGuard(blok.font_size),
+    text_center: textCenterGuard(blok.text_center),
+    max_width: textWidthGuard(blok.max_width),
+};
+---
+
+<Title blok={title} />

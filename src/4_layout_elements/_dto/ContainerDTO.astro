@@ -1,0 +1,44 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import type { PaddingX, PaddingY } from '../../tailwind/types/Padding';
+import { paddingGuard } from '../../tailwind/types/Padding';
+import Container from '../Container.astro';
+
+export interface StoryblokContainerDTO extends SbBlokData {
+    component: 'container',
+    content: SbBlokData[],
+    size: any,
+    padding_x?: any,
+    padding_y?: any,
+}
+
+const blokType = ['small', 'medium', 'large', 'full'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokContainer extends StoryblokEditableData, PaddingX, PaddingY {
+    type: BlokType,
+}
+
+interface Props {
+    blok: StoryblokContainerDTO;
+}
+
+const { blok } = Astro.props;
+
+const grid: StoryblokContainer = {
+    type: (isType(blok.size) ? blok.size : 'large'),
+    storyblokData: storyblokEditable(blok),
+    padding_x: paddingGuard(blok.padding_x),
+    padding_y: paddingGuard(blok.padding_y),
+};
+---
+
+<Container blok={grid}>
+    {blok.content.map(item => {            
+		return <StoryblokComponent blok={item} />
+	})}
+</Container>

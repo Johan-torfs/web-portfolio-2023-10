@@ -1,0 +1,41 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import type { MarginBottom } from '../../tailwind/types/Margin';
+import { marginGuard } from '../../tailwind/types/Margin';
+import List from '../List.astro';
+
+export interface StoryblokListDTO extends SbBlokData {
+    component: 'list';
+    content: SbBlokData[];
+    type: 'list';
+}
+
+const blokType = ['list'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokList extends StoryblokEditableData, MarginBottom {
+    type: BlokType,
+}
+
+interface Props {
+    blok: StoryblokListDTO;
+}
+
+const { blok } = Astro.props;
+
+const list: StoryblokList = {
+    type: (isType(blok.type) ? blok.type : 'list'),
+    storyblokData: storyblokEditable(blok),
+    margin_bottom: marginGuard(blok.margin_bottom),
+};
+---
+
+<List blok={list}>
+    {blok.content.map(item => {            
+		return <StoryblokComponent blok={item} />
+	})}
+</List>

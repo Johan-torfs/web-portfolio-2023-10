@@ -1,0 +1,46 @@
+---
+import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
+import '@fortawesome/fontawesome-free/css/solid.min.css';
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro</title>
+	</head>
+	<body class="bg-primary-50 text-primary-950 dark:bg-primary-950 dark:text-primary-200 antialiased transition">
+		<slot name="nav"/>
+        <slot name="header"/>
+        <main><slot/></main>
+        <slot name="footer"/>
+	</body>
+</html>
+
+<script>
+	const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+	const prefersLight = window.matchMedia('(prefers-color-scheme: light)');
+
+	const theme = localStorage.getItem('theme');
+
+	if (theme == 'dark') {
+		document.documentElement.classList.add('dark');
+		localStorage.setItem('theme', 'dark');
+	} else if (theme == 'light') {
+		document.documentElement.classList.remove('dark');
+		localStorage.setItem('theme', 'light');
+	} else if (prefersDark.matches) {
+		document.documentElement.classList.add('dark');
+		localStorage.setItem('theme', 'dark');
+	} else if (prefersLight.matches) {
+		document.documentElement.classList.remove('dark');
+		localStorage.setItem('theme', 'light');
+	} else {
+		document.documentElement.classList.add('light');
+		localStorage.setItem('theme', 'light');
+	}
+</script>

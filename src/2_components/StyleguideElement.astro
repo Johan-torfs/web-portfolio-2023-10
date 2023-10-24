@@ -1,0 +1,19 @@
+---
+import type { StoryblokStyleguideElement } from './_dto/StyleguideElementDTO.astro';
+import ColorsPrimaryStyleguideElement from './styleguide_element/ColorsPrimaryStyleguideElement.astro';
+import TypographyStyleguideElement from './styleguide_element/TypographyStyleguideElement.astro';
+
+interface Props {
+    blok: StoryblokStyleguideElement;
+}
+
+const { blok } = Astro.props;
+---
+
+{blok.type == 'colors-primary' ?
+<ColorsPrimaryStyleguideElement blok={blok} />
+: null}
+
+{blok.type == 'typography' ?
+<TypographyStyleguideElement blok={blok} />
+: null}

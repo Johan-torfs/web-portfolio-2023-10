@@ -1,0 +1,21 @@
+---
+import type { StoryblokDropdown } from './_dto/DropdownDTO.astro';
+import DefaultDropdown from './dropdown/DefaultDropdown.astro';
+
+interface Props {
+    blok: StoryblokDropdown;
+}
+
+const { blok } = Astro.props;
+---
+
+{blok.type == 'dropdown' ?
+<DefaultDropdown blok={blok}>
+    <Fragment slot="label">
+        <slot name="label" />
+    </Fragment>
+    <Fragment slot="content">
+        <slot name="content" />
+    </Fragment>
+</DefaultDropdown>
+: null}

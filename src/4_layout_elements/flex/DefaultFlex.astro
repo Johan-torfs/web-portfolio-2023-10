@@ -1,0 +1,14 @@
+---
+import type { StoryblokFlex } from '../_dto/FlexDTO.astro';
+
+interface Props {
+    blok: StoryblokFlex;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+<div class:list={["flex", className]} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']} >
+    <slot />
+</div>

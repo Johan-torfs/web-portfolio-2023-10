@@ -1,0 +1,44 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import Dropdown from '../Dropdown.astro';
+
+export interface StoryblokDropdownDTO extends SbBlokData {
+    component: "dropdown";
+    label: string;
+    content: SbBlokData[];
+    type: any;
+}
+
+const blokType = ['dropdown'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokDropdown extends StoryblokEditableData {
+    type: BlokType, 
+}
+
+interface Props {
+    blok: StoryblokDropdownDTO;
+}
+
+const { blok } = Astro.props;
+
+const dropdown: StoryblokDropdown = {
+    type: (isType(blok.type) ? blok.type : 'dropdown'),
+    storyblokData: storyblokEditable(blok),
+};
+---
+
+<Dropdown blok={dropdown}>
+    <Fragment slot="label">
+        {blok.label}
+    </Fragment>
+    <Fragment slot="content">
+        {blok.content.map(item => {            
+            return <StoryblokComponent blok={item} />
+        })}
+    </Fragment>
+</Dropdown>

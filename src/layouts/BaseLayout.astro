@@ -1,0 +1,72 @@
+---
+import { useStoryblokApi, type SbBlokData } from "@storyblok/astro";
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import { ViewTransitions } from "astro:transitions";
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
+import '@fortawesome/fontawesome-free/css/solid.min.css';
+
+const storyblokApi = useStoryblokApi()
+const response = await storyblokApi.get('cdn/stories/settings/base-layout', {
+  version: import.meta.env.PUBLIC_VERCEL_ENV == 'production' ? 'published' : 'draft',
+}).then((response: any ) => {
+    return response;
+}).catch((error: any) => {
+    console.log(error);
+});
+
+const navigation = response.data.story.content.navigation;
+const footer = response.data.story.content.footer;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro Stone</title>
+		<ViewTransitions />
+	</head>
+	<body class="bg-primary-50 text-primary-950 dark:bg-primary-950 dark:text-primary-200 antialiased transition">
+		{navigation?.map((blok: SbBlokData) => {            
+			return <StoryblokComponent blok={blok} />
+		})}
+		<slot name="header"/>
+        <main><slot/></main>
+		{footer?.map((blok: SbBlokData) => {            
+			return <StoryblokComponent blok={blok} />
+		})}
+	</body>
+</html>
+
+<script>
+	const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+	const prefersLight = window.matchMedia('(prefers-color-scheme: light)');
+
+	const update = () => {
+		const theme = localStorage.getItem('theme');
+
+		if (theme == 'dark') {
+			document.documentElement.classList.add('dark');
+			localStorage.setItem('theme', 'dark');
+		} else if (theme == 'light') {
+			document.documentElement.classList.remove('dark');
+			localStorage.setItem('theme', 'light');
+		} else if (prefersDark.matches) {
+			document.documentElement.classList.add('dark');
+			localStorage.setItem('theme', 'dark');
+		} else if (prefersLight.matches) {
+			document.documentElement.classList.remove('dark');
+			localStorage.setItem('theme', 'light');
+		} else {
+			document.documentElement.classList.add('light');
+			localStorage.setItem('theme', 'light');
+		}
+	}
+
+	update();
+	document.addEventListener('astro:after-swap', update)
+</script>

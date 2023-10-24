@@ -1,0 +1,45 @@
+---
+import { getClassName, getPaddingYClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokContainer } from './_dto/ContainerDTO.astro';
+
+import SmallContainer from './container/SmallContainer.astro';
+import MediumContainer from './container/MediumContainer.astro';
+import LargeContainer from './container/LargeContainer.astro';
+import FullContainer from './container/FullContainer.astro';
+
+interface Props {
+    blok: StoryblokContainer;
+}
+
+const { blok } = Astro.props;
+
+var className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingYClasses},
+    ]
+})
+---
+
+{blok.type == 'small' ?
+    <SmallContainer blok={blok} className={className}>
+        <slot />
+    </SmallContainer>
+: null}
+
+{blok.type == 'medium' ?
+    <MediumContainer blok={blok} className={className}>
+        <slot />
+    </MediumContainer>
+: null}
+
+{blok.type == 'large' ?
+    <LargeContainer blok={blok} className={className}>
+        <slot />
+    </LargeContainer>
+: null}
+
+{blok.type == 'full' ?
+    <FullContainer blok={blok} className={className}>
+        <slot />
+    </FullContainer>
+: null}

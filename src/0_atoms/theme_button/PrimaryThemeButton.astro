@@ -1,0 +1,65 @@
+---
+import type { StoryblokThemeButton } from '../_dto/ThemeButtonDTO.astro';
+
+interface Props {
+    blok: StoryblokThemeButton;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+
+const id = "theme-button-" + Math.random().toString(36).slice(2, 11);
+
+const classNameColor = 'text-primary-950 dark:text-primary-200';
+
+const classNameLocal = [className, 'hover:bg-primary-500/10 dark:hover:bg-primary-400/10 focus-visible:ring-2 focus:outline-none ring-primary-950 dark:ring-primary-200 text-primary-950 dark:text-primary-200 rounded-full transition-all duration-200 ease-in-out p-4 min-w-[50px] inline-flex items-center justify-center border border-transparent font-medium text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 cursor-pointer leading-none aspect-square'].join(' ');
+---
+
+<theme-button>
+    <button id={id}
+        data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}
+        class:list={[classNameLocal]}
+        type="button"
+        transition:persist
+    >
+        {blok.icons?.map(icon => (
+            <i class:list={[icon.icon.type, icon.icon.icon, classNameColor, "!hidden"]} aria-hidden="true" data-theme={icon.theme}></i>
+        ))} 
+    </button>
+</theme-button>
+
+<script>
+    // Define the behaviour for our new type of HTML element.
+    class ThemeButton extends HTMLElement {
+        constructor() {
+            super();
+
+            const htmlElement = document.documentElement;
+            const button = this.querySelector('button');
+            const icons = button?.querySelectorAll('i') || [];
+
+            var currentTheme = localStorage.getItem('theme') || 'light';
+            var currentIcon = button?.querySelector(`[data-theme="${currentTheme}"]`) || icons[0];
+
+            icons.forEach(icon => !icon.classList.contains('!hidden') ? icon.classList.add('!hidden') : null);
+            currentIcon.classList.remove('!hidden');
+
+            // Each time the button is clicked, update the count.
+            button?.addEventListener('click', () => {
+                const nextIcon = button?.querySelector('i:not(.\\!hidden) + i') || icons[0];
+                currentIcon?.classList.add('!hidden');
+                currentIcon = nextIcon;
+
+                htmlElement?.classList.remove(currentTheme);
+                currentTheme = currentIcon.getAttribute('data-theme') || 'light';
+
+                currentIcon.classList.remove('!hidden');
+                localStorage.setItem('theme', currentTheme);
+                htmlElement?.classList.add(currentTheme);
+            });
+        }
+    }
+
+    // Tell the browser to use our ThemeButton class for <theme-button> elements.
+    customElements.define('theme-button', ThemeButton);
+</script>

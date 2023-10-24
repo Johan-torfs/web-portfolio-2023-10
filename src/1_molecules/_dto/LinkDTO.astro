@@ -1,0 +1,64 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import type { PaddingX, PaddingY } from '../../tailwind/types/Padding';
+import { paddingGuard } from '../../tailwind/types/Padding';
+import type { MarginX, MarginY } from '../../tailwind/types/Margin';
+import { marginGuard } from '../../tailwind/types/Margin';
+import Link from '../Link.astro';
+
+interface LinkDTO {
+    linktype: string;
+    cached_url: string;
+}
+
+export interface StoryblokLinkDTO extends SbBlokData {
+    component: 'link';
+    content: SbBlokData[];
+    type: 'link';
+    link: LinkDTO;
+    new_tab: boolean;
+}
+
+const blokType = ['link'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokLink extends StoryblokEditableData, PaddingX, PaddingY, MarginX, MarginY {
+    type: BlokType,
+    link: string;
+    target: '_blank' | '_self';
+}
+
+interface Props {
+    blok: StoryblokLinkDTO;
+}
+
+const { blok } = Astro.props;
+
+const link: StoryblokLink = {
+    type: (isType(blok.type) ? blok.type : 'link'),
+    storyblokData: storyblokEditable(blok),
+    padding_x: paddingGuard(blok.padding_x),
+    padding_y: paddingGuard(blok.padding_y),
+    margin_x: marginGuard(blok.margin_x),
+    margin_y: marginGuard(blok.margin_y),
+    link: normalizedLink(blok.link),
+    target: blok.new_tab ? '_blank' : '_self',
+};
+
+function normalizedLink(link: StoryblokLinkDTO['link']): string {
+    if (!link) return '#';
+    if (link.cached_url == 'home') return '/';
+    if (link.linktype === 'story') return `/${link.cached_url}`;
+    return  link.cached_url;
+}
+---
+
+<Link blok={link}>
+    {blok.content.map(item => {            
+		return <StoryblokComponent blok={item} />
+	})}
+</Link>

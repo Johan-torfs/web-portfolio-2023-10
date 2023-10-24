@@ -1,0 +1,68 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+
+import { borderRadiusSizeGuard, type BorderRadius, borderRadiusPositionGuard } from '../../tailwind/types/Border';
+import type { Dimensions } from '../../tailwind/types/Dimensions';
+import { visibilityGuard, type Visibility } from '../../tailwind/types/Visibility';
+
+import Image from '../Image.astro';
+
+interface AssetDTO {
+    id: number;
+    alt: string;
+    name: string;
+    focus: string;
+    title: string;
+    source: string;
+    filename: string;
+    copyright: string;
+    fieldtype: string;
+    meta_data: {};
+    is_external_url: boolean;
+}
+
+export interface StoryblokImageDTO extends SbBlokData {
+    component: 'image',
+    image: AssetDTO,
+    image_dark: AssetDTO,
+    type: any;
+    from: any;
+    to: any;
+    width: any;
+    height: any;
+    border_radius_size: any;
+    border_radius_position: any;
+}
+
+const blokType = ['image'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokImage extends StoryblokEditableData, Visibility, Dimensions, BorderRadius {
+    image: AssetDTO,
+    image_dark: AssetDTO,
+    type: BlokType, 
+}
+
+interface Props {
+    blok: StoryblokImageDTO;
+}
+
+const { blok } = Astro.props;
+
+const image: StoryblokImage = {
+    image: blok.image,
+    image_dark: blok.image_dark,
+    type: (isType(blok.type) ? blok.type : 'image'),
+    storyblokData: storyblokEditable(blok),
+    from: visibilityGuard(blok.from),
+    to: visibilityGuard(blok.to),
+    width: blok.width || undefined,
+    height: blok.height || undefined,
+    border_radius_size: borderRadiusSizeGuard(blok.border_radius_size),
+    border_radius_position: borderRadiusPositionGuard(blok.border_radius_position),
+};
+---
+
+<Image blok={image} />

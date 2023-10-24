@@ -1,0 +1,33 @@
+---
+import type { StoryblokButton } from '../_dto/ButtonDTO.astro';
+
+interface Props {
+    blok: StoryblokButton;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+
+const classNameLocal = ['items-center inline-flex focus-visible:outline focus-visible:outline-2 text-base bg-primary-600 border border-transparent dark:bg-primary-400 dark:focus-visible:outline-primary-400 dark:hover:bg-primary-300 dark:text-primary-950 focus-visible:outline-offset-2 focus-visible:outline-primary-600 font-medium hover:bg-primary-700 justify-center px-5 py-3 rounded-full text-white transition', className].join(' ');
+---
+
+{blok.submit ? 
+<button
+    data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}
+    class:list={[classNameLocal]}
+    type="submit"
+>
+    {blok.icon?.icon ? <i class:list={[blok.icon?.type, blok.icon?.icon]} aria-hidden="true"></i> : null}
+    <span class:list={[{"ml-2": !!blok.icon?.type}]}>{blok.text}</span>  
+</button>
+:
+<a
+    data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}
+    href={blok.link}
+    class:list={[classNameLocal]}
+    type="button"
+>
+    {blok.icon?.icon ? <i class:list={[blok.icon?.type, blok.icon?.icon]} aria-hidden="true"></i> : null}
+    <span class:list={[{"ml-2": !!blok.icon?.type}]}>{blok.text}</span>  
+</a>
+}

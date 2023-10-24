@@ -1,0 +1,12 @@
+---
+import { type StoryblokIcon } from '../_dto/IconDTO.astro';
+
+interface Props {
+    blok: StoryblokIcon;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+<i class:list={[className, blok.icon.type, blok.icon.icon]} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']} aria-hidden="true"></i>

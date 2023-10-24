@@ -1,0 +1,31 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import StyleguideElement from '../StyleguideElement.astro';
+
+export interface StoryblokStyleguideElementDTO extends SbBlokData {
+    component: 'styleguide_element',
+    type?: any,
+}
+
+const blokType = ['colors-primary', 'typography'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokStyleguideElement extends StoryblokEditableData {
+    type: BlokType, 
+}
+
+interface Props {
+    blok: StoryblokStyleguideElementDTO;
+}
+
+const { blok } = Astro.props;
+
+const styleguideElement: StoryblokStyleguideElement = {
+    type: (isType(blok.type) ? blok.type : 'colors-primary'),
+    storyblokData: storyblokEditable(blok),
+};
+---
+
+<StyleguideElement blok={styleguideElement} />

@@ -1,0 +1,58 @@
+---
+import { useStoryblokApi, type SbBlokData } from '@storyblok/astro'
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+    const storyblokApi = useStoryblokApi()
+    const { data } = await storyblokApi.get('cdn/stories', {
+        version: import.meta.env.PUBLIC_VERCEL_ENV == 'production' ? 'published' : 'draft',
+    });
+
+    const stories = data.stories;    
+    return stories.map((entry: any) => {
+        let slug = entry.full_slug == "home" ? undefined : entry.full_slug;
+        return { 
+            params: {slug}, 
+            props: { 
+                blok: entry.content
+            }
+        }
+    });
+}
+
+const exludedPages: (string | undefined)[] = []; // Refactor to Regex string
+
+let response = undefined;
+const { slug } = Astro.params.slug == undefined ? { slug: "home" } : Astro.params;
+if (import.meta.env.PUBLIC_VERCEL_ENV != 'production') {
+    if (!exludedPages.includes(slug)) {
+        const storyblokApi = useStoryblokApi()        
+        response = await storyblokApi.get('cdn/stories/' + slug, {
+        version: import.meta.env.PUBLIC_VERCEL_ENV == 'production' ? 'published' : 'draft',
+        }).then((response: any ) => {      
+            return response;
+        }).catch((error: any) => {
+            const jsonError = JSON.parse(error);
+            return jsonError;
+        });
+    }
+
+    const errorCode = response.status;
+    if (errorCode) return Astro.redirect(`/${errorCode}`);
+}
+
+const blok = import.meta.env.PUBLIC_VERCEL_ENV == 'production' ? Astro.props.blok : response.data.story.content;
+---
+
+<BaseLayout>
+    <Fragment slot-name="header">
+        {blok.header?.map((blok: SbBlokData) => {            
+            return <StoryblokComponent blok={blok} />
+        })}
+    </Fragment>
+    {blok.content?.map((blok: SbBlokData) => {            
+        return <StoryblokComponent blok={blok} />
+    })}
+</BaseLayout>

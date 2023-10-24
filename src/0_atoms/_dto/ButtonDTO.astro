@@ -1,0 +1,71 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import { borderRadiusSizeGuard, type BorderRadius, borderRadiusPositionGuard } from '../../tailwind/types/Border';
+import { paddingGuard, type PaddingX, type PaddingY } from '../../tailwind/types/Padding';
+
+import Button from '../Button.astro';
+
+interface Icon {
+    type: string;
+    icon: string;
+}
+
+interface Link {
+    linktype: string;
+    cached_url: string;
+}
+
+export interface StoryblokButtonDTO extends SbBlokData {
+    component: "button" | "icon_button";
+    text?: string;
+    link: Link;
+    icon?: Icon;
+    submit?: boolean;
+    type: any;
+    padding_x: any,
+    padding_y: any,
+    border_radius_size: any,
+    border_radius_position: any,
+}
+
+const blokType = ['primary'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokButton extends StoryblokEditableData, PaddingX, PaddingY, BorderRadius {
+    text?: string;
+    link: string;
+    icon?: Icon;
+    submit?: boolean;
+    type: BlokType,
+}
+
+interface Props {
+    blok: StoryblokButtonDTO;
+}
+
+const { blok } = Astro.props;
+
+const button: StoryblokButton = {
+    text: blok.text,
+    link: normalizedLink(blok.link),
+    icon: blok.icon,
+    submit: blok.submit || false,
+    type: (isType(blok.type) ? blok.type : 'primary'),
+    storyblokData: storyblokEditable(blok),
+    padding_x: paddingGuard(blok.padding_x),
+    padding_y: paddingGuard(blok.padding_y),
+    border_radius_size: borderRadiusSizeGuard(blok.border_radius_size),
+    border_radius_position: borderRadiusPositionGuard(blok.border_radius_position),
+};
+
+function normalizedLink(link: Link): string {
+    if (!link) return '#';
+    if (link.cached_url === 'home') return '/';
+    if (link.linktype === 'story') return `/${link.cached_url}`;
+    return  link.cached_url;
+}
+---
+
+<Button blok={button} />

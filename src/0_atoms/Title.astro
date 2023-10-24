@@ -1,0 +1,49 @@
+---
+import { getClassName, getFontSizeClasses, getTextCenterClasses, getMarginBottomClasses, getTextMaxWidthClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokTitle } from './_dto/TitleDTO.astro';
+import H1 from './title/H1.astro';
+import H2 from './title/H2.astro';
+import H3 from './title/H3.astro';
+import H4 from './title/H4.astro';
+import H5 from './title/H5.astro';
+import H6 from './title/H6.astro';
+
+interface Props {
+    blok: StoryblokTitle;
+}
+
+const { blok } = Astro.props;
+
+const className = getClassName(blok, {
+    decorators: [
+        {decorator: getFontSizeClasses},
+        {decorator: getTextCenterClasses},
+        {decorator: getMarginBottomClasses},
+        {decorator: getTextMaxWidthClasses},
+    ]
+});
+---
+
+{blok.type == 'h1' ? (
+    <H1 blok={blok} className={className} />
+) : null}
+
+{blok.type == 'h2' || blok.type == undefined ? (
+    <H2 blok={blok} className={className} />
+) : null}
+
+{blok.type == 'h3' ? (
+    <H3 blok={blok} className={className} />
+) : null}
+
+{blok.type == 'h4' ? (
+    <H4 blok={blok} className={className} />
+) : null}
+
+{blok.type == 'h5' ? (
+    <H5 blok={blok} className={className} />
+) : null}
+
+{blok.type == 'h6' ? (
+    <H6 blok={blok} className={className} />
+) : null}

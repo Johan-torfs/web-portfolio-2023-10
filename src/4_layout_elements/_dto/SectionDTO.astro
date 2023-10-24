@@ -1,0 +1,50 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import type { PaddingX, PaddingY } from '../../tailwind/types/Padding';
+import { paddingGuard } from '../../tailwind/types/Padding';
+import type { MarginX, MarginY } from '../../tailwind/types/Margin';
+import { marginGuard } from '../../tailwind/types/Margin';
+import Section from '../Section.astro';
+
+export interface StoryblokSectionDTO extends SbBlokData {
+    component: 'section',
+    content: SbBlokData[],
+    type: any,
+    padding_x?: any,
+    padding_y?: any,
+    margin_x?: any,
+    margin_y?: any,
+}
+
+const blokType = ['section', 'footer', 'div', 'header'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokSection extends StoryblokEditableData, PaddingX, PaddingY, MarginX, MarginY {
+    type: BlokType,
+}
+
+interface Props {
+    blok: StoryblokSectionDTO;
+}
+
+const { blok } = Astro.props;
+
+const grid: StoryblokSection = {
+    type: (isType(blok.type) ? blok.type : 'section'),
+    storyblokData: storyblokEditable(blok),
+    padding_x: paddingGuard(blok.padding_x),
+    padding_y: paddingGuard(blok.padding_y),
+    margin_x: marginGuard(blok.margin_x),
+    margin_y: marginGuard(blok.margin_y),
+};
+---
+
+<Section blok={grid}>
+    {blok.content.map(item => {            
+		return <StoryblokComponent blok={item} />
+	})}
+</Section>

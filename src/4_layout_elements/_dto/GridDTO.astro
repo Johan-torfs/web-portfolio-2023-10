@@ -1,0 +1,68 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import Grid from '../Grid.astro';
+import type { Columns } from '../../tailwind/types/Columns';
+import { columnsGuard } from '../../tailwind/types/Columns';
+import type { Gap } from '../../tailwind/types/Gap';
+import { gapGuard } from '../../tailwind/types/Gap';
+import type { JustifyContent, JustifyItems, AlignContent, AlignItems } from '../../tailwind/types/Grid';
+import { contentGuard, itemsGuard } from '../../tailwind/types/Grid';
+import type { PaddingX, PaddingY } from '../../tailwind/types/Padding';
+import { paddingGuard } from '../../tailwind/types/Padding';
+import type { Visibility } from '../../tailwind/types/Visibility';
+import { visibilityGuard } from '../../tailwind/types/Visibility';
+
+export interface StoryblokGridDTO extends SbBlokData {
+    component: 'grid',
+    content: SbBlokData[],
+    type?: any,
+    gap?: any,
+    grid_columns?: any,
+    padding_x?: any,
+    padding_y?: any,
+    justify_content?: any,
+    justify_items?: any,
+    align_content?: any,
+    align_items?: any,
+    from?: any,
+    to?: any,
+}
+
+const blokType = ['grid', 'dividers', 'divide-x-lg'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokGrid extends StoryblokEditableData, Gap, Columns, PaddingX, PaddingY, JustifyContent, JustifyItems, AlignContent, AlignItems, Visibility {
+    type: BlokType,
+}
+
+interface Props {
+    blok: StoryblokGridDTO;
+}
+
+const { blok } = Astro.props;
+
+const grid: StoryblokGrid = {
+    type: (isType(blok.type) ? blok.type : 'grid'),
+    storyblokData: storyblokEditable(blok),
+    gap: gapGuard(blok.gap),
+    grid_columns: columnsGuard(blok.grid_columns),
+    padding_x: paddingGuard(blok.padding_x),
+    padding_y: paddingGuard(blok.padding_y),
+    justify_content: contentGuard(blok.justify_content),
+    justify_items: itemsGuard(blok.justify_items),
+    align_content: contentGuard(blok.align_content),
+    align_items: itemsGuard(blok.align_items),
+    from: visibilityGuard(blok.from),
+    to: visibilityGuard(blok.to),
+};
+---
+
+<Grid blok={grid}>
+    {blok.content.map(item => {            
+		return <StoryblokComponent blok={item} />
+	})}
+</Grid>

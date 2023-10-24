@@ -1,0 +1,24 @@
+---
+import PrimaryButton from './button/PrimaryButton.astro';
+import type { StoryblokButton } from './_dto/ButtonDTO.astro';
+import { getClassName, getPaddingXClasses, getPaddingYClasses, getBorderRadiusClasses } from '../tailwind/class_name_compiler';
+
+
+interface Props {
+    blok: StoryblokButton;
+}
+
+const { blok } = Astro.props;
+
+var className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+        {decorator: getBorderRadiusClasses}
+    ]
+});
+---
+
+{blok.type == 'primary' ?
+    <PrimaryButton className={className} blok={blok} />
+: null}

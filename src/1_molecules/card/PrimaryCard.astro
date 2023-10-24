@@ -1,0 +1,14 @@
+---
+import type { StoryblokCard } from '../_dto/CardDTO.astro';
+
+interface Props {
+    blok: StoryblokCard;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+<div class:list={[className, 'grid bg-primary-500/10 dark:bg-primary-400/10']} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}>
+    <slot /> 
+</div>

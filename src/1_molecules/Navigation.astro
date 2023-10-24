@@ -1,0 +1,39 @@
+---
+import DefaultNavigation from './navigation/DefaultNavigation.svelte';
+
+import { getClassName, getPaddingXClasses, getPaddingYClasses, getMarginXClasses, getMarginYClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokNavigation } from './_dto/NavigationDTO.astro';
+
+interface Props {
+    blok: StoryblokNavigation;
+}
+
+const { blok } = Astro.props;
+
+const className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+        {decorator: getMarginXClasses},
+        {decorator: getMarginYClasses},
+    ]
+});
+---
+
+{blok.type == "navigation" ? 
+<DefaultNavigation
+    className={className}
+    storyblokEditableData={blok.storyblokData}
+    client:idle
+>
+    <Fragment slot="desktop">
+        <slot name="desktop" />
+    </Fragment>
+    <Fragment slot="mobile">
+        <slot name="mobile" />
+    </Fragment>
+    <Fragment slot="mobile-menu">
+        <slot name="mobile-menu" />
+    </Fragment>
+</DefaultNavigation>
+: null}

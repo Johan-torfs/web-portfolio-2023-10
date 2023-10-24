@@ -1,0 +1,14 @@
+---
+import { type StoryblokList } from '../_dto/ListDTO.astro';
+
+interface Props {
+    blok: StoryblokList;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+<ul class:list={[className, blok.type, 'flex flex-col gap-4']} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}>
+    <slot />
+</ul>

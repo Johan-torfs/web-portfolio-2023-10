@@ -1,0 +1,14 @@
+---
+import { type StoryblokLink } from '../_dto/LinkDTO.astro';
+
+interface Props {
+    blok: StoryblokLink;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+<a class:list={[className, blok.type, 'group']} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']} href={blok.link} target={blok.target}>
+    <slot />
+</a>

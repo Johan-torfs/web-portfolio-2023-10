@@ -1,0 +1,14 @@
+---
+import { type StoryblokColumn } from '../_dto/ColumnDTO.astro';
+
+interface Props {
+    blok: StoryblokColumn;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+<div class:list={[className]} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}>
+    <slot />
+</div>

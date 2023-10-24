@@ -1,0 +1,14 @@
+---
+import type { StoryblokAlert } from '../_dto/AlertDTO.astro';
+
+interface Props {
+    blok: StoryblokAlert;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+<div class:list={[className, 'bg-primary-700/10 dark:bg-primary-400/10, text-primary-700 dark:text-primary-400']} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}>
+    <slot /> 
+</div>

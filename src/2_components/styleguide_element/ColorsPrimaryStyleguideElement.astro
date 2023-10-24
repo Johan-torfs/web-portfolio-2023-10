@@ -1,0 +1,92 @@
+---
+import Title from '../../0_atoms/Title.astro';
+import type { StoryblokTitle } from '../../0_atoms/_dto/TitleDTO.astro';
+import Grid from '../../4_layout_elements/Grid.astro';
+import type { StoryblokGrid } from '../../4_layout_elements/_dto/GridDTO.astro';
+import type { StoryblokStyleguideElement } from '../_dto/StyleguideElementDTO.astro';
+
+interface Props {
+    blok: StoryblokStyleguideElement;
+}
+
+const { blok } = Astro.props;
+const title: StoryblokTitle = {
+    title: 'Colors primary',
+    type: 'h2',
+};
+const grid: StoryblokGrid = {
+    type: 'grid',
+    grid_columns: {
+        xs: '2',
+        sm: '6',
+    },
+    gap: {
+        xs: '8',
+    },
+};
+---
+
+<div class="" data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}>
+    <Title blok={title} />
+    <Grid blok={grid}>
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-white border border-primary-400/50 dark:border-primary-500/50 rounded-xl mb-2"></div>
+            <p>White</p>
+        </div>
+
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-primary-50 border border-primary-400/50 dark:border-primary-500/50 rounded-xl mb-2"></div>
+            <p>50</p>
+        </div>
+
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-primary-100 border border-primary-400/50 dark:border-primary-500/50 rounded-xl mb-2"></div>
+            <p>100</p>
+        </div>
+
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-primary-200 border border-primary-400/50 dark:border-primary-500/50 rounded-xl mb-2"></div>
+            <p>200</p>
+        </div>
+
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-primary-300 border border-primary-400/50 dark:border-primary-500/50 rounded-xl mb-2"></div>
+            <p>300</p>
+        </div>
+
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-primary-400 border border-primary-400/50 dark:border-primary-500/50 rounded-xl mb-2"></div>
+            <p>400</p>
+        </div>
+
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-primary-500 border border-primary-400/50 dark:border-primary-500/50 rounded-xl mb-2"></div>
+            <p>500</p>
+        </div>
+
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-primary-600 border border-primary-400/50 dark:border-primary-500/50 rounded-xl mb-2"></div>
+            <p>600</p>
+        </div>
+
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-primary-700 border border-primary-400/50 dark:border-primary-500/50 rounded-xl mb-2"></div>
+            <p>700</p>
+        </div>
+
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-primary-800 border border-primary-400/50 dark:border-primary-500/50 rounded-xl mb-2"></div>
+            <p>800</p>
+        </div>
+
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-primary-900 border border-primary-400/50 dark:border-primary-500/50 rounded-xl mb-2"></div>
+            <p>900</p>
+        </div>
+
+        <div class="mb-4">
+            <div class="w-16 h-16 bg-primary-950 border border-primary-400/50 dark:border-primary-500/50 rounded-xl mb-2"></div>
+            <p>950</p>
+        </div>
+    </Grid>
+</div>

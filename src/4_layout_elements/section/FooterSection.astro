@@ -1,0 +1,14 @@
+---
+import { type StoryblokSection } from '../_dto/SectionDTO.astro';
+
+interface Props {
+    blok: StoryblokSection;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+<footer class:list={[className, 'bg-primary-500/10 dark:bg-primary-400/10']} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']} >
+    <slot />
+</footer>

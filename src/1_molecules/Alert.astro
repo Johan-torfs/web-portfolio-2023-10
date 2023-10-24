@@ -1,0 +1,55 @@
+---
+
+import { getClassName, getPaddingXClasses, getPaddingYClasses, getBorderRadiusClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokAlert } from './_dto/AlertDTO.astro';
+
+import PrimaryAlert from './alert/PrimaryAlert.astro';
+import DangerAlert from './alert/DangerAlert.astro';
+import WarningAlert from './alert/WarningAlert.astro';
+import SuccessAlert from './alert/SuccessAlert.astro';
+import InfoAlert from './alert/InfoAlert.astro';
+
+interface Props {
+    blok: StoryblokAlert;
+}
+
+const { blok } = Astro.props;
+
+var className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+        {decorator: getBorderRadiusClasses}
+    ]
+});
+---
+
+{blok.type == 'primary' ?
+<PrimaryAlert blok={blok} className={className}>
+    <slot />
+</PrimaryAlert>
+: null}
+
+{blok.type == 'danger' ?
+<DangerAlert blok={blok} className={className}>
+    <slot />
+</DangerAlert>
+: null}
+
+{blok.type == 'warning' ?
+<WarningAlert blok={blok} className={className}>
+    <slot />
+</WarningAlert>
+: null}
+
+{blok.type == 'success' ?
+<SuccessAlert blok={blok} className={className}>
+    <slot />
+</SuccessAlert>
+: null}
+
+{blok.type == 'info' ?
+<InfoAlert blok={blok} className={className}>
+    <slot />
+</InfoAlert>
+: null}

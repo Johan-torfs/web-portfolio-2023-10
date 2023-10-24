@@ -1,0 +1,58 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+// @ts-ignore
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import type { Gap } from '../../tailwind/types/Gap';
+import { gapGuard } from '../../tailwind/types/Gap';
+import type { JustifyContent, AlignItems } from '../../tailwind/types/Grid';
+import { contentGuard, itemsGuard } from '../../tailwind/types/Grid';
+import type { PaddingX, PaddingY } from '../../tailwind/types/Padding';
+import { paddingGuard } from '../../tailwind/types/Padding';
+import type { MarginBottom } from '../../tailwind/types/Margin';
+import { marginGuard } from '../../tailwind/types/Margin';
+import Flex from '../Flex.astro';
+
+export interface StoryblokFlexDTO extends SbBlokData {
+    component: 'flex',
+    content: SbBlokData[],
+    type?: any,
+    gap?: any,
+    padding_x?: any,
+    padding_y?: any,
+    justify_content?: any,
+    align_items?: any,
+    margin_bottom?: any,
+}
+
+const blokType = ['flex'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokFlex extends StoryblokEditableData, Gap, PaddingX, PaddingY, JustifyContent, AlignItems, MarginBottom {
+    type: BlokType,
+}
+
+interface Props {
+    blok: StoryblokFlexDTO;
+}
+
+const { blok } = Astro.props;
+
+const grid: StoryblokFlex = {
+    type: (isType(blok.type) ? blok.type : 'flex'),
+    storyblokData: storyblokEditable(blok),
+    gap: gapGuard(blok.gap),
+    padding_x: paddingGuard(blok.padding_x),
+    padding_y: paddingGuard(blok.padding_y),
+    justify_content: contentGuard(blok.justify_content),
+    align_items: itemsGuard(blok.align_items),
+    margin_bottom: marginGuard(blok.margin_bottom),
+};
+---
+
+<Flex blok={grid}>
+    {blok.content.map(item => {            
+		return <StoryblokComponent blok={item} />
+	})}
+</Flex>

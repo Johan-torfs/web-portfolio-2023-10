@@ -1,0 +1,40 @@
+---
+import { getClassName, getFontSizeClasses, getMarginBottomClasses, getTextCenterClasses, getTextMaxWidthClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokText } from './_dto/TextDTO.astro';
+import ParagraphText from './text/ParagraphText.astro';
+import ParagraphFadedText from './text/ParagraphFadedText.astro';
+import TextText from './text/TextText.astro';
+import LinkText from './text/LinkText.astro';
+
+
+interface Props {
+    blok: StoryblokText;
+}
+
+const { blok } = Astro.props;
+
+const className = getClassName(blok, {
+    decorators: [
+        {decorator: getFontSizeClasses},
+        {decorator: getTextCenterClasses},
+        {decorator: getMarginBottomClasses},
+        {decorator: getTextMaxWidthClasses}
+    ]
+});
+---
+
+{blok.type == 'paragraph' ? 
+    <ParagraphText blok={blok} className={className} />
+: null}
+
+{blok.type == 'paragraph-faded' ? 
+    <ParagraphFadedText blok={blok} className={className} />
+: null}
+
+{blok.type == 'text' ? 
+    <TextText blok={blok} className={className} />
+: null}
+
+{blok.type == 'link' ? 
+    <LinkText blok={blok} className={className} />
+: null}

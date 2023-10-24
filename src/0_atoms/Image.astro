@@ -1,0 +1,22 @@
+---
+import { getClassName, getVisibilityClasses, getBorderRadiusClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokImage } from './_dto/ImageDTO.astro';
+import DefaultImage from './image/DefaultImage.astro'
+
+interface Props {
+    blok: StoryblokImage;
+}
+
+const { blok } = Astro.props;
+
+const className = getClassName(blok, {
+    decorators: [
+        {decorator: getVisibilityClasses},
+        {decorator: getBorderRadiusClasses}
+    ]
+});
+---
+
+{blok.type == 'image' ?
+    <DefaultImage blok={blok} className={className} />
+: null}

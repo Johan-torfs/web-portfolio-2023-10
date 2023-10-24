@@ -1,0 +1,26 @@
+---
+import { getClassName, getPaddingXClasses, getPaddingYClasses } from '../tailwind/class_name_compiler';
+import type { StoryblokLink } from './_dto/LinkDTO.astro';
+import DefaultLink from './link/DefaultLink.astro';
+
+interface Props {
+    blok: StoryblokLink;
+}
+
+const { blok } = Astro.props;
+
+const className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingXClasses},
+        {decorator: getPaddingYClasses},
+    ]
+});
+
+if (!blok.type) blok.type = 'link';
+---
+
+{blok.type == 'link' ? (
+<DefaultLink blok={blok} className={className}>
+    <slot />
+</DefaultLink>
+) : null}

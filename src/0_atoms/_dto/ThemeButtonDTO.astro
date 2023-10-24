@@ -1,0 +1,52 @@
+---
+import { storyblokEditable, type SbBlokData } from '@storyblok/astro';
+import type { StoryblokEditableData } from '../../storyblok/StoryblokEditableData';
+import type { BorderRadius } from '../../tailwind/types/Border';
+import type { PaddingX, PaddingY } from '../../tailwind/types/Padding';
+
+import ThemeButton from '../ThemeButton.astro';
+
+interface Icon {
+    type: string;
+    icon: string;
+}
+
+interface Icons {
+    component: "theme_icon",
+    icon: Icon;
+    theme: string;
+}
+
+export interface StoryblokThemeButtonDTO extends SbBlokData {
+    component: "theme_button";
+    icons?: Icons[];
+    type: any;
+    padding_x: any,
+    padding_y: any,
+    border_radius_size: any,
+    border_radius_position: any,
+}
+
+const blokType = ['primary'] as const;
+type BlokType = (typeof blokType)[number];
+const isType = (x: any): x is BlokType => blokType.includes(x);
+
+export interface StoryblokThemeButton extends StoryblokEditableData, PaddingX, PaddingY, BorderRadius {
+    icons?: Icons[];
+    type: BlokType, 
+}
+
+interface Props {
+    blok: StoryblokThemeButtonDTO;
+}
+
+const { blok } = Astro.props;
+
+const themeButton: StoryblokThemeButton = {
+    icons: blok.icons,
+    type: (isType(blok.type) ? blok.type : 'primary'),
+    storyblokData: storyblokEditable(blok),
+};
+---
+
+<ThemeButton blok={themeButton} />
