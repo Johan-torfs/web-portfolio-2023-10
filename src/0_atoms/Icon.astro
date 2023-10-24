@@ -2,18 +2,25 @@
 import type { StoryblokIcon } from './_dto/IconDTO.astro';
 import PrimaryIcon from './icon/PrimaryIcon.astro';
 import DefaultIcon from './icon/DefaultIcon.astro';
+import { getClassName, getPaddingXClasses } from '../tailwind/class_name_compiler';
 
 interface Props {
     blok: StoryblokIcon;
 }
 
 const { blok } = Astro.props;
+
+const className = getClassName(blok, {
+    decorators: [
+        {decorator: getPaddingXClasses},
+    ]
+});
 ---
 
 {blok.type == 'icon' ?
-<DefaultIcon blok={blok} /> 
+<DefaultIcon blok={blok} className={className} /> 
 : null}
 
 {blok.type == 'primary-lg' ?
-<PrimaryIcon blok={blok} /> 
+<PrimaryIcon blok={blok} className={className} /> 
 : null}

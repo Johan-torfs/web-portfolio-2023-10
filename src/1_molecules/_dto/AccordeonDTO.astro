@@ -19,7 +19,7 @@ export interface StoryblokAccordeonDTO extends SbBlokData {
     to: any,
 }
 
-const blokType = ['primary-card-accordion'] as const;
+const blokType = ['primary-card-accordion', 'navigation'] as const;
 type BlokType = (typeof blokType)[number];
 const isType = (x: any): x is BlokType => blokType.includes(x);
 
