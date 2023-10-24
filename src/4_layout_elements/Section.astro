@@ -5,6 +5,7 @@ import DefaultSection from './section/DefaultSection.astro';
 import FooterSection from './section/FooterSection.astro';
 import HeaderSection from './section/HeaderSection.astro';
 import DivSection from './section/DivSection.astro';
+import HeroSection from './section/HeroSection.astro';
 
 interface Props {
     blok: StoryblokSection;
@@ -39,8 +40,15 @@ const className = getClassName(blok, {
         <slot />
     </HeaderSection>
 : null}
+
 {blok.type === 'div' ?
     <DivSection blok={blok} className={className}>
         <slot />
     </DivSection>
+: null}
+
+{blok.type === 'hero' ?
+    <HeroSection blok={blok} className={className}>
+        <slot />
+    </HeroSection>
 : null}

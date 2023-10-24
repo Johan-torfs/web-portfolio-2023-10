@@ -19,7 +19,7 @@ export interface StoryblokSectionDTO extends SbBlokData {
     margin_y?: any,
 }
 
-const blokType = ['section', 'footer', 'div', 'header'] as const;
+const blokType = ['section', 'footer', 'div', 'header', 'hero'] as const;
 type BlokType = (typeof blokType)[number];
 const isType = (x: any): x is BlokType => blokType.includes(x);
 
