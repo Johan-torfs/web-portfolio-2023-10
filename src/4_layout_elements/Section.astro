@@ -1,5 +1,5 @@
 ---
-import { getClassName, getPaddingXClasses, getPaddingYClasses, getMarginXClasses, getMarginYClasses } from '../tailwind/class_name_compiler';
+import { getClassName, getPaddingXClasses, getPaddingYClasses, getMarginXClasses, getMarginYClasses, getAnimateOnScrollClasses } from '../tailwind/class_name_compiler';
 import type { StoryblokSection } from './_dto/SectionDTO.astro';
 import DefaultSection from './section/DefaultSection.astro';
 import FooterSection from './section/FooterSection.astro';
@@ -19,6 +19,7 @@ const className = getClassName(blok, {
         {decorator: getPaddingYClasses},
         {decorator: getMarginXClasses},
         {decorator: getMarginYClasses},
+        {decorator: getAnimateOnScrollClasses},
     ]
 })
 ---
@@ -52,3 +53,33 @@ const className = getClassName(blok, {
         <slot />
     </HeroSection>
 : null}
+
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('transition-opacity');
+                entry.target.classList.add('duration-1000');
+
+                entry.target.classList.remove('opacity-0');
+            } else {
+                entry.target.classList.remove('transition-opacity');
+                entry.target.classList.remove('duration-1000');
+                entry.target.classList.remove('delay-1000');
+
+                entry.target.classList.add('opacity-0');
+            }
+        })
+    })
+
+    function init() {
+        const elements = document.querySelectorAll('.animate-on-scroll');
+        elements.forEach((element) => {
+            observer.observe(element);
+        });
+    }
+
+    init();
+    document.addEventListener('astro:after-swap', init);
+</script>

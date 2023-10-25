@@ -9,6 +9,37 @@ interface Props {
 const { blok, className } = Astro.props;
 ---
 
-<div class:list={[className]} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']} >
+<div-section class:list={[className]} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']} >
     <slot />
-</div>
+</div-section>
+
+<!-- <script>
+    class Section extends HTMLElement {
+        constructor() {
+            super();
+            if (!this.classList.contains('animate-on-scroll')) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('transition-opacity');
+                        entry.target.classList.add('duration-1000');
+
+                        entry.target.classList.remove('opacity-0');
+                    } else {
+                        entry.target.classList.remove('transition-opacity');
+                        entry.target.classList.remove('duration-1000');
+                        entry.target.classList.remove('delay-1000');
+
+                        entry.target.classList.add('opacity-0');
+                    }
+                })
+            })
+
+            observer.observe(this);
+        }
+    }
+
+    // Tell the browser to use our Section class for <div-section> elements.
+    customElements.define('div-section', Section);
+</script> -->

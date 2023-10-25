@@ -15,6 +15,7 @@ import { getFontSizeClasses } from './decorators/text_size';
 import { getTextCenterClasses } from './decorators/text_center';
 import { getMarginBottomClasses } from './decorators/margin_bottom';
 import { getTextMaxWidthClasses, getTextWidthClasses } from './decorators/text_width';
+import { getAnimateOnScrollClasses } from './decorators/animate_on_scroll';
 
 function getClassName(blok, options) {
     var className = options.className || '';
@@ -47,4 +48,5 @@ export {
     getMarginBottomClasses,
     getTextMaxWidthClasses,
     getTextWidthClasses,
+    getAnimateOnScrollClasses,
 }
