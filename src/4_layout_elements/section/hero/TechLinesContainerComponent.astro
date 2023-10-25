@@ -126,7 +126,6 @@ const id = "tech-lines-" + Math.random().toString(36).slice(2, 11);
     function createSvg(line, element, index) {
         let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
-        svg.setAttribute("width", element.offsetWidth);
         line.defs ? svg.innerHTML = line.defs : svg.innerHTML = "";
 
         let svgScale = (line.scale || 1);
@@ -145,6 +144,7 @@ const id = "tech-lines-" + Math.random().toString(36).slice(2, 11);
         svg.style.position = "absolute";
         svg.style.left = line.start[0] * svgScale + "px";
         svg.style.top = line.start[1] * svgScale + "px";
+        svg.classList.add('w-full');
 
         return {svg, lineElement, circleElement};
     }
@@ -402,29 +402,29 @@ const id = "tech-lines-" + Math.random().toString(36).slice(2, 11);
         transform: rotateY(180deg);
     }
 
-    .left::after {
-        top: -10%;
-    }
+    // .left::after {
+    //     top: -10%;
+    // }
 
-    .right::after {
-        top: -10%;
-    }
+    // .right::after {
+    //     top: -10%;
+    // }
 
-    div::after {
-        content: "";
-        position: absolute;
-        left: -180px;
-        height: min(100%, 300px);
-        width: 300px;
-        background-image: radial-gradient(
-            circle at 50% 50%,
-            var(--color-primary) 0%,
-            var(--color-primary-transarent) 60%
-        );
+    // div::after {
+    //     content: "";
+    //     position: absolute;
+    //     left: -180px;
+    //     height: min(100%, 300px);
+    //     width: 300px;
+    //     background-image: radial-gradient(
+    //         circle at 50% 50%,
+    //         var(--color-primary) 0%,
+    //         var(--color-primary-transarent) 60%
+    //     );
 
-        z-index: -1;
-        opacity: 0.3;
-    }
+    //     z-index: -1;
+    //     opacity: 0.3;
+    // }
 
     .line {
         position: absolute;
