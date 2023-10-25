@@ -4,6 +4,7 @@ import TransparentCard from './card/TransparentCard.astro';
 import BorderPrimaryCard from './card/BorderPrimaryCard.astro';
 import type { StoryblokCard } from './_dto/CardDTO.astro';
 import { getClassName, getPaddingXClasses, getPaddingYClasses, getBorderRadiusClasses, getVisibilityClasses } from '../tailwind/class_name_compiler';
+import FilledPrimaryCard from './card/FilledPrimaryCard.astro';
 
 interface Props {
     blok: StoryblokCard;
@@ -37,4 +38,10 @@ var className = getClassName(blok, {
     <BorderPrimaryCard blok={blok} className={className}>
         <slot /> 
     </BorderPrimaryCard>
+) : null }
+
+{blok.type == 'filled-primary' ? (
+    <FilledPrimaryCard blok={blok} className={className}>
+        <slot />    
+    </FilledPrimaryCard>
 ) : null }

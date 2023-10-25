@@ -10,7 +10,7 @@ const linesLarge = lines.large;
 const id = "tech-lines-" + Math.random().toString(36).slice(2, 11);
 ---
 
-<div id={id} class:list={[position, 'absolute flex-grow w-full pointer-events-none mb-4 lg:mb-8']} aria-hidden="true"></div>
+<div id={id} class:list={[position, 'absolute flex-grow w-full pointer-events-none mb-4 lg:mb-8 -z-10']} aria-hidden="true"></div>
 
 <script define:vars={{id, lines: {sm: linesXSmall, xl: linesLarge}}}>
     const INTERVALS_LINE = 100;

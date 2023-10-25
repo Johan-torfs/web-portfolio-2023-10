@@ -21,7 +21,7 @@ export interface StoryblokCardDTO extends SbBlokData {
     to: any,
 }
 
-const blokType = ['primary-card', 'transparent-card', 'border-primary-card'] as const;
+const blokType = ['primary-card', 'transparent-card', 'border-primary-card', 'filled-primary'] as const;
 type BlokType = (typeof blokType)[number];
 const isType = (x: any): x is BlokType => blokType.includes(x);
 
