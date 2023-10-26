@@ -22,7 +22,7 @@ states.forEach((state, index) => {
 
 function updateForm(e) {
     if (formState == finalState) {
-        storeInput("__submitting", 'true');
+        storeInput("__submitting", true);
         submitForm(e)
         .then(
             (value) => {
@@ -40,7 +40,7 @@ function updateForm(e) {
             }
         )
         .catch((error) => alert("Wegens migratie, werkt deze functie tijdelijk niet. Gelieve voor contact het onderstaande emailadres te gebruiken."))
-        .finally(() => storeInput("__submitting", 'false'));
+        .finally(() => storeInput("__submitting", false));
     } else {
         changeFormState(formState + 1);
     }
