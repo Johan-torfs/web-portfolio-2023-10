@@ -19,7 +19,7 @@ const response = await storyblokApi.get('cdn/stories/404-page', {
 const blok = response.data?.story.content || {header: [], content: []};
 ---
 
-<BaseLayout>
+<BaseLayout title="404 - Page not found">
     <Fragment slot-name="header">
         {blok.header?.map((blok: SbBlokData) => {            
             return <StoryblokComponent blok={blok} />

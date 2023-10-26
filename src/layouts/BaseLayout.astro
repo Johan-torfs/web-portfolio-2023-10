@@ -20,6 +20,8 @@ const response = await storyblokApi.get('cdn/stories/settings/base-layout', {
 
 const navigation = response.data.story.content.navigation;
 const footer = response.data.story.content.footer;
+
+const { title, description, keywords } = Astro.props;
 ---
 
 <html lang="en" class="dark">
@@ -28,7 +30,9 @@ const footer = response.data.story.content.footer;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Johan Torfs - Webdevelopment</title>
+		<title>{title ? title : 'Johan Torfs - Webdevelopment'}</title>
+		<meta name="description" content={description}>
+		<meta name="keywords" content={keywords}>
 
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
