@@ -27,6 +27,7 @@ export interface StoryblokButtonDTO extends SbBlokData {
     padding_y: any,
     border_radius_size: any,
     border_radius_position: any,
+    new_tab: boolean;
 }
 
 const blokType = ['primary'] as const;
@@ -39,6 +40,7 @@ export interface StoryblokButton extends StoryblokEditableData, PaddingX, Paddin
     icon?: Icon;
     submit?: boolean;
     type: BlokType,
+    target: '_blank' | '_self';
 }
 
 interface Props {
@@ -58,6 +60,7 @@ const button: StoryblokButton = {
     padding_y: paddingGuard(blok.padding_y),
     border_radius_size: borderRadiusSizeGuard(blok.border_radius_size),
     border_radius_position: borderRadiusPositionGuard(blok.border_radius_position),
+    target: blok.new_tab ? '_blank' : '_self',
 };
 
 function normalizedLink(link: Link): string {

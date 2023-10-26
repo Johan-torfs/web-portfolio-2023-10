@@ -26,6 +26,7 @@ const classNameLocal = ['items-center inline-flex focus-visible:outline focus-vi
     href={blok.link}
     class:list={[classNameLocal]}
     type="button"
+    target={blok.target}
 >
     {blok.icon?.icon ? <i class:list={[blok.icon?.type, blok.icon?.icon]} aria-hidden="true"></i> : null}
     <span class:list={[{"ml-2": !!blok.icon?.type}]}>{blok.text}</span>  
