@@ -21,13 +21,27 @@ states.forEach((state, index) => {
 
 function updateForm(e) {
     if (formState == finalState) {
-        submitForm(e);
-        if (postSubmitState == 0) {
-            e.target.reset();
-            changeFormState(0)
-        } else {
-            changeFormState(postSubmitState);
-        }
+        submitForm(e)
+        .then(
+            (value) => {
+                if (value.status == 201) {
+                    if (postSubmitState == 0) {
+                        e.target.reset();
+                        changeFormState(0)
+                    } else {
+                        changeFormState(postSubmitState);
+                    }
+
+                    const formData = new FormData(e.target);
+                    const data = Object.fromEntries(formData.entries());
+                    console.log(data);
+                }
+                else {
+                    alert("Wegens migratie, werkt deze functie tijdelijk niet. Gelieve voor contact het onderstaande emailadres te gebruiken.");
+                }
+            }
+        )
+        .catch((error) => alert("Wegens migratie, werkt deze functie tijdelijk niet. Gelieve voor contact het onderstaande emailadres te gebruiken."));
     } else {
         changeFormState(formState + 1);
     }
@@ -35,8 +49,11 @@ function updateForm(e) {
 
 function submitForm(e) {
     const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-    console.log(data);
+    return fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData).toString(),
+    });
 }
 
 const delay = 300;
