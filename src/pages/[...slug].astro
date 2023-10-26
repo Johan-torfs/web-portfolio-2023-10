@@ -46,7 +46,7 @@ if (import.meta.env.PUBLIC_VERCEL_ENV != 'production') {
 const blok = import.meta.env.PUBLIC_VERCEL_ENV == 'production' ? Astro.props.blok : response.data.story.content;
 ---
 
-<BaseLayout>
+<BaseLayout title={blok.title ? blok.title : 'Johan Torfs - Webdevelopment'} description={blok.description}>
     <Fragment slot-name="header">
         {blok.header?.map((blok: SbBlokData) => {            
             return <StoryblokComponent blok={blok} />

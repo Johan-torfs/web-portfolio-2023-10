@@ -8,7 +8,14 @@ const env = loadEnv("", process.cwd(), ['STORYBLOK', 'PUBLIC_VERCEL_ENV']);
 
 export default defineConfig({
   output: env.PUBLIC_VERCEL_ENV === 'production' ? 'hybrid' : 'server',
-  adapter: vercel(),
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
+    },
+    speedInsights: {
+      enabled: true,
+    },
+  }),
   integrations: [tailwind(), storyblok({
     accessToken: env.STORYBLOK_TOKEN,
     bridge: true,
