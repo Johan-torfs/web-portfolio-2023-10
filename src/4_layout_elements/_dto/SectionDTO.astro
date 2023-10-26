@@ -8,6 +8,7 @@ import { paddingGuard } from '../../tailwind/types/Padding';
 import type { MarginX, MarginY } from '../../tailwind/types/Margin';
 import { marginGuard } from '../../tailwind/types/Margin';
 import Section from '../Section.astro';
+import { animateOnScrollGuard, type AnimateOnScroll } from '../../tailwind/types/AnimateOnScroll';
 
 export interface StoryblokSectionDTO extends SbBlokData {
     component: 'section',
@@ -17,13 +18,14 @@ export interface StoryblokSectionDTO extends SbBlokData {
     padding_y?: any,
     margin_x?: any,
     margin_y?: any,
+    animate_on_scroll?: any,
 }
 
-const blokType = ['section', 'footer', 'div', 'header'] as const;
+const blokType = ['section', 'footer', 'div', 'header', 'hero'] as const;
 type BlokType = (typeof blokType)[number];
 const isType = (x: any): x is BlokType => blokType.includes(x);
 
-export interface StoryblokSection extends StoryblokEditableData, PaddingX, PaddingY, MarginX, MarginY {
+export interface StoryblokSection extends StoryblokEditableData, PaddingX, PaddingY, MarginX, MarginY, AnimateOnScroll {
     type: BlokType,
 }
 
@@ -40,6 +42,7 @@ const grid: StoryblokSection = {
     padding_y: paddingGuard(blok.padding_y),
     margin_x: marginGuard(blok.margin_x),
     margin_y: marginGuard(blok.margin_y),
+    animate_on_scroll: animateOnScrollGuard(blok.animate_on_scroll),
 };
 ---
 

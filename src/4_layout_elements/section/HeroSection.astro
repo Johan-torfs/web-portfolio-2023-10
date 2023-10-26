@@ -1,0 +1,19 @@
+---
+import { type StoryblokSection } from '../_dto/SectionDTO.astro';
+
+import TechLinesContainerComponent from './hero/TechLinesContainerComponent.astro';
+import { lines } from './hero/lines.data';
+
+interface Props {
+    blok: StoryblokSection;
+    className?: string;
+}
+
+const { blok, className } = Astro.props;
+---
+
+<section class:list={[className, 'flex flex-col justify-center relative min-h-[calc(100vh-5rem)]']} data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']} >
+    <TechLinesContainerComponent position="left" lines={lines['lines-left']} />
+    <slot />
+    <TechLinesContainerComponent position="right" lines={lines['lines-right']} />
+</section>

@@ -22,7 +22,7 @@ const navigation = response.data.story.content.navigation;
 const footer = response.data.story.content.footer;
 ---
 
-<html lang="en">
+<html lang="en" class="dark">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -63,8 +63,8 @@ const footer = response.data.story.content.footer;
 			document.documentElement.classList.remove('dark');
 			localStorage.setItem('theme', 'light');
 		} else {
-			document.documentElement.classList.add('light');
-			localStorage.setItem('theme', 'light');
+			document.documentElement.classList.add('dark');
+			localStorage.setItem('theme', 'dark');
 		}
 	}
 

@@ -1,0 +1,432 @@
+---
+interface Props {
+    position: "left" | "right";
+    lines: any;
+}
+
+const { position, lines } = Astro.props;
+const linesXSmall = lines.xsmall;
+const linesLarge = lines.large;
+const id = "tech-lines-" + Math.random().toString(36).slice(2, 11);
+---
+
+<div id={id} class:list={[position, 'absolute flex-grow w-full pointer-events-none mb-4 lg:mb-8 -z-10']} aria-hidden="true"></div>
+
+<script define:vars={{id, lines: {sm: linesXSmall, xl: linesLarge}}}>
+    const INTERVALS_LINE = 100;
+    const INTERVALS_CIRCLE = 5;
+    var container = document.querySelector('#' + id);
+    const breakpoints = {
+        sm: 640,
+        md: 768,
+        lg: 1024,
+        xl: 1280,
+    };
+    
+    var animationStopFunctions = [()=>{}];
+    var animationReferences = [];
+    var currentBreakpoint = 'sm';
+
+    window.addEventListener('load', () => {
+        updateBreakpoint();
+        setupAllLines();
+        window.addEventListener('resize', updateLines);
+    });
+
+    document.addEventListener('astro:after-swap', () => {
+        container = document.querySelector('#' + id);
+        if (!container) {
+            stopAnimations();
+            window.removeEventListener('resize', updateLines);
+        }
+    });
+
+    document.addEventListener('astro:page-load', () => {
+        container = document.querySelector('#' + id);
+        if (container) {
+            updateBreakpoint();
+            setupAllLines();
+            window.addEventListener('resize', updateLines);
+        }
+    });
+
+    function updateLines() {
+        if (!updateBreakpoint()) return;
+
+        stopAnimations();
+        setupAllLines();
+    }
+
+    function updateBreakpoint() {
+        let prev = currentBreakpoint;
+        if (window.innerWidth > breakpoints.xl)
+            currentBreakpoint = 'xl';
+        else
+            currentBreakpoint = 'sm';
+        return prev != currentBreakpoint;
+    }
+
+    function setupAllLines() {
+        setupLines(
+            container, 
+            lines[currentBreakpoint]
+        ).then(() => {
+            animationStopFunctions.push(startBlinkingAnimation(document.querySelector('#' + id)));
+            initializing = false;
+        },
+        () => {
+            console.log('error setting up lines right');
+            initializing = false;
+        });
+    }
+
+    function stopAnimations() {
+        animationStopFunctions.forEach(stopFunction => {
+            stopFunction();
+        });
+        animationStopFunctions = [];
+    }
+
+    function setupLines(element, lines) {
+        element.innerHTML = "";
+
+        var promise = new Promise(async (resolve, reject) => {
+            if (!element) { reject(); return; }
+
+            let lineSegmentCount = 0;
+            let lineSegmentCompleted = 0;
+
+            lines.forEach((line, index) => {
+                let {svg, lineElement, circleElement} = createSvg(line, element, index);
+                if (!svg) { reject(); return;}
+
+                element.appendChild(svg);
+                lineSegmentCount++;
+
+                drawLine(lineElement, line.speed, line.delay || 0).then(() => {
+                    drawCircle(circleElement, 10).then(() => {
+                        lineSegmentCompleted++;
+                    });
+                });
+            });
+
+            let i = 0
+            while (lineSegmentCompleted < lineSegmentCount) {
+                await delay(100);
+                if (i > 100) { reject(); return; }
+                i++;
+            }
+            
+            resolve();
+        });
+
+        return promise;
+    }
+
+    function createSvg(line, element, index) {
+        let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+
+        line.defs ? svg.innerHTML = line.defs : svg.innerHTML = "";
+
+        let svgScale = (line.scale || 1);
+        let lineSegments = line.line;
+        let length = lineSegments.length;
+
+        if (length < 2) return null;
+
+        const lineElement = createLineElement(line, lineSegments, svgScale);
+        svg.appendChild(lineElement);
+
+        const circleElement = createCircleElement(line, lineSegments[length - 1], svgScale);
+        svg.appendChild(circleElement);
+
+        svg.setAttribute("id", element.id + "_line_" + index);
+        svg.style.position = "absolute";
+        svg.style.left = line.start[0] * svgScale + "px";
+        svg.style.top = line.start[1] * svgScale + "px";
+        svg.classList.add('w-full');
+
+        return {svg, lineElement, circleElement};
+    }
+
+    function createLineElement(line, lineSegments, svgScale) {
+        let i = 1;
+        let length = lineSegments.length;
+        let dAttribute = "M" + lineSegments[0][0] * svgScale + " " + lineSegments[0][1] * svgScale;
+        while (i < length) {
+            dAttribute += " L" + lineSegments[i][0] * svgScale + " " + lineSegments[i][1] * svgScale;
+            i++;
+        }
+
+        const lineElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        lineElement.setAttribute("d", dAttribute);
+        lineElement.setAttribute("stroke", line.gradient ? "url(#gradient-line)" : line.color);
+        lineElement.setAttribute("fill", "none");
+        lineElement.setAttribute("stroke-width", line.stroke_width);
+
+        lineElement.style.strokeDasharray = lineElement.getTotalLength();
+        lineElement.style.strokeDashoffset = lineElement.getTotalLength();
+
+        return lineElement;
+    }
+
+    function createCircleElement(line, lastSegment, svgScale) {
+        const circleElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circleElement.setAttribute("cx", lastSegment[0] * svgScale);
+        circleElement.setAttribute("cy", lastSegment[1] * svgScale);
+        circleElement.setAttribute("r", line.radius * svgScale);
+        circleElement.setAttribute("fill", line.gradient ? "url(#gradient-circle)" : line.color);
+        circleElement.style.opacity = 0;
+
+        return circleElement;
+    }
+
+    function drawLine(lineElement, time, delayTime) {
+        var promise = new Promise(async (resolve, reject) => {
+            await delay(delayTime);
+
+            for (let index = 0; index < INTERVALS_LINE; index++) {
+                await delay(time/INTERVALS_LINE);
+                lineElement.style.strokeDashoffset -= lineElement.getTotalLength() / INTERVALS_LINE * (0.5 + index/INTERVALS_LINE);
+            }
+            lineElement.style.strokeDashoffset = 0;
+            resolve();
+        });
+
+        return promise;
+    }
+
+    function drawCircle(circleElement, time) {
+        var promise = new Promise(async (resolve, reject) => {
+            for (let index = 0; index < INTERVALS_CIRCLE; index++) {
+                await delay(time/INTERVALS_CIRCLE);
+                circleElement.style.opacity = 1 / INTERVALS_CIRCLE * index;
+            }
+            circleElement.style.opacity = 1;
+            resolve();
+        });
+
+        return promise;
+    }
+
+    function startBlinkingAnimation(element) {
+        animationReferences[element.id] = true;
+        runBlinkAnimation(element);
+
+        return () => {
+            animationReferences[element.id] = false;
+        }
+    }
+
+    async function runBlinkAnimation(element) {
+        while (animationReferences[element.id]) {
+            blinkLine(element, Math.floor(Math.random() * element.querySelectorAll("svg").length));
+            await delay(Math.random() * 1500 + 1000);
+        } 
+    }
+
+    function blinkLine(element, index) {
+        var promise = new Promise(async (resolve, reject) => {
+            if (!element) {
+                reject();
+                return;
+            }
+
+            let svg = document.getElementById(element.id + "_line_" + index);
+            if (!svg) {
+                reject();
+                return;
+            }
+
+            let circleElement = svg.getElementsByTagName("circle")[0];
+
+            let pathElement = svg.getElementsByTagName("path")[0];
+            let startX = pathElement.getAttribute("d").split("M")[1].split(" ")[0];
+            let startY = pathElement.getAttribute("d").split("M")[1].split(" ")[1];
+            let stroke_width = pathElement.getAttribute("stroke-width");
+
+            let blinkElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            blinkElement.setAttribute("cx", startX);
+            blinkElement.setAttribute("cy", startY);
+            blinkElement.setAttribute("r", stroke_width * 2);
+            blinkElement.setAttribute("fill", "url(#gradient-blink)");
+            svg.appendChild(blinkElement);
+
+            moveBlinkElement(blinkElement, pathElement).then(() => {
+                blinkCircle(blinkElement, circleElement).then(() => {
+                    resolve();
+                }).finally(() => {
+                    svg.removeChild(blinkElement);
+                });
+            });
+
+            resolve();
+        });
+
+        return promise;
+    }
+
+    function moveBlinkElement(blinkElement, pathElement) {
+        var promise = new Promise(async (resolve, reject) => {
+            let time = 200;
+            let startCoordinates = pathElement.getAttribute("d").split("M")[1];
+            let nextCoordinatesList = pathElement.getAttribute("d").split("L");
+
+            let startX = parseFloat(startCoordinates.split(" ")[0]);
+            let startY = parseFloat(startCoordinates.split(" ")[1]);
+            for (let index = 1; index < nextCoordinatesList.length; index++) {
+                let completed = false;
+                let x = parseFloat(nextCoordinatesList[index].split(" ")[0]);
+                let y = parseFloat(nextCoordinatesList[index].split(" ")[1]);
+
+                lerpBlinkElement(blinkElement, startX, startY, x, y, time).then(() => {
+                    completed = true;
+                });
+
+
+                let i = 0
+                while (!completed) {
+                    await delay(1);
+
+                    if (i > time + 100) {
+                        reject();
+                        return;
+                    }
+
+                    i++;
+                }
+
+                startX = x;
+                startY = y;
+            }
+
+            resolve();
+        });
+
+        return promise;
+    }
+
+    function lerpBlinkElement(blinkElement, startX, startY, x, y, time) {
+        var promise = new Promise(async (resolve, reject) => {
+            let i = 0;
+            while (i < 20) {
+                await delay(time/20);
+                blinkElement.setAttribute("cx", startX + (x - startX) / 20 * i);
+                blinkElement.setAttribute("cy", startY + (y - startY) / 20 * i);
+                i++;
+            }
+
+            blinkElement.setAttribute("cx", x);
+            blinkElement.setAttribute("cy", y);
+
+            resolve();
+        });
+
+        return promise;
+    }
+
+    function blinkCircle(blinkElement, circleElement) {
+        var promise = new Promise(async (resolve, reject) => {
+            let time = 200;
+            let startR = parseFloat(blinkElement.getAttribute("r"))
+            let r = parseFloat(circleElement.getAttribute("r")) * 2;
+
+            for (let index = 0; index < 2; index++) {
+                let completed = false;
+
+                lerpBlinkElementRadius(
+                    blinkElement, 
+                    startR, 
+                    r, 
+                    time
+                ).then(() => {
+                    completed = true;
+                });
+
+                let i = 0
+                while (!completed) {
+                    await delay(1);
+
+                    if (i > time + 100) {
+                        reject();
+                        return;
+                    }
+
+                    i++;
+                }
+
+                let tempR = startR;
+                startR = r;
+                r = tempR;
+            }
+
+            resolve();
+        });
+        
+        return promise;
+    }
+
+    function lerpBlinkElementRadius(blinkElement, startR, r, time) {
+        var promise = new Promise(async (resolve, reject) => {
+            let i = 0;
+            while (i < 20) {
+                await delay(time/20);
+                blinkElement.setAttribute("r", startR + (r - startR) / 20 * i);
+                i++;
+            }
+
+            blinkElement.setAttribute("r", r);
+
+            resolve();
+        });
+
+        return promise;
+    }
+
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+</script>
+
+<style lang="scss">
+    .right {
+        bottom: 4rem;
+        left: 0;
+        transform: rotateX(180deg);
+    }
+
+    .left {
+        top: 4rem;
+        right: 0;
+        transform: rotateY(180deg);
+    }
+
+    // .left::after {
+    //     top: -10%;
+    // }
+
+    // .right::after {
+    //     top: -10%;
+    // }
+
+    // div::after {
+    //     content: "";
+    //     position: absolute;
+    //     left: -180px;
+    //     height: min(100%, 300px);
+    //     width: 300px;
+    //     background-image: radial-gradient(
+    //         circle at 50% 50%,
+    //         var(--color-primary) 0%,
+    //         var(--color-primary-transarent) 60%
+    //     );
+
+    //     z-index: -1;
+    //     opacity: 0.3;
+    // }
+
+    .line {
+        position: absolute;
+    }
+</style>
