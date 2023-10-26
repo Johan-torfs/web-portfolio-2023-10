@@ -13,9 +13,9 @@
     disabled={$inputs["__submitting"]}
 >
     {#if !!icon?.type || $inputs["__submitting"]}
-        <i class={$inputs["__submitting"] ? "fas fa-spinner fa-spin" : [icon.type, icon.icon].join(' ')} aria-hidden="true"></i>
+        <i class={($inputs["__submitting"] ? "fas fa-spinner fa-spin" : [icon.type, icon.icon].join(' ')) + ' mr-2'} aria-hidden="true"></i>
     {/if}
-    <span class:list={[{"ml-2": !!icon?.type}]}>
+    <span>
         <slot />
     </span>  
 </button>
