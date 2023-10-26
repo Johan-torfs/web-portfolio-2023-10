@@ -13,7 +13,7 @@ const classNameLocal = ['items-center inline-flex focus-visible:outline focus-vi
 ---
 
 {blok.submit ? 
-<PrimaryButtonSvelte storyblokData={blok.storyblokData} className={classNameLocal} icon={blok.icon}>
+<PrimaryButtonSvelte storyblokData={blok.storyblokData} className={classNameLocal} icon={blok.icon} client:idle>
     {blok.text}
 </PrimaryButtonSvelte>
 :
