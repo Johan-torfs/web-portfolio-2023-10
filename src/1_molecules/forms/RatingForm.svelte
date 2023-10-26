@@ -1,6 +1,7 @@
 <script>
 import { fly } from 'svelte/transition';
 import { quadInOut } from 'svelte/easing';
+import { storeInput } from '../../stores.js';
 
 export let className;
 export let states;
@@ -21,6 +22,7 @@ states.forEach((state, index) => {
 
 function updateForm(e) {
     if (formState == finalState) {
+        storeInput("__submitting", true);
         submitForm(e)
         .then(
             (value) => {
@@ -31,17 +33,14 @@ function updateForm(e) {
                     } else {
                         changeFormState(postSubmitState);
                     }
-
-                    const formData = new FormData(e.target);
-                    const data = Object.fromEntries(formData.entries());
-                    console.log(data);
                 }
                 else {
                     alert("Wegens migratie, werkt deze functie tijdelijk niet. Gelieve voor contact het onderstaande emailadres te gebruiken.");
                 }
             }
         )
-        .catch((error) => alert("Wegens migratie, werkt deze functie tijdelijk niet. Gelieve voor contact het onderstaande emailadres te gebruiken."));
+        .catch((error) => alert("Wegens migratie, werkt deze functie tijdelijk niet. Gelieve voor contact het onderstaande emailadres te gebruiken."))
+        .finally(() => storeInput("__submitting", false));
     } else {
         changeFormState(formState + 1);
     }

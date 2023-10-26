@@ -1,5 +1,6 @@
 ---
 import type { StoryblokButton } from '../_dto/ButtonDTO.astro';
+import PrimaryButtonSvelte from './PrimaryButton.svelte';
 
 interface Props {
     blok: StoryblokButton;
@@ -12,14 +13,9 @@ const classNameLocal = ['items-center inline-flex focus-visible:outline focus-vi
 ---
 
 {blok.submit ? 
-<button
-    data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}
-    class:list={[classNameLocal]}
-    type="submit"
->
-    {blok.icon?.icon ? <i class:list={[blok.icon?.type, blok.icon?.icon]} aria-hidden="true"></i> : null}
-    <span class:list={[{"ml-2": !!blok.icon?.type}]}>{blok.text}</span>  
-</button>
+<PrimaryButtonSvelte storyblokData={blok.storyblokData} className={classNameLocal} icon={blok.icon}>
+    {blok.text}
+</PrimaryButtonSvelte>
 :
 <a
     data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}
@@ -32,3 +28,12 @@ const classNameLocal = ['items-center inline-flex focus-visible:outline focus-vi
     <span class:list={[{"ml-2": !!blok.icon?.type}]}>{blok.text}</span>  
 </a>
 }
+
+<!-- <button
+    data-blok-c={blok.storyblokData?.['data-blok-c']} data-blok-uid={blok.storyblokData?.['data-blok-uid']}
+    class:list={[classNameLocal]}
+    type="submit"
+>
+    {blok.icon?.icon ? <i class:list={[blok.icon?.type, blok.icon?.icon]} aria-hidden="true"></i> : null}
+    <span class:list={[{"ml-2": !!blok.icon?.type}]}>{blok.text}</span>  
+</button> -->
