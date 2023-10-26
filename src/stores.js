@@ -5,9 +5,9 @@ export const navigation = writable({
     open: false,
 });
 
-export function storeInput(n, e) {
+export function storeInput(n, value) {
     inputs.update((s) => {
-        s[n] = e.target.value;
+        s[n] = value;
         return s;
     });
 }

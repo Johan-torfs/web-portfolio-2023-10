@@ -12,5 +12,5 @@ const classNameLocal = ['text-base appearance-none bg-primary-50 block border-0 
 
 <div data-blok-c={storyblokEditableData['data-blok-c']} data-blok-uid={storyblokEditableData['data-blok-uid']}>
     <label for={id} class="sr-only">{label}</label>
-    <textarea on:change={(e) => storeInput(name, e)} id={id} name={name} value={value} class={classNameLocal} placeholder={placeholder} rows="3"></textarea>
+    <textarea on:change={(e) => storeInput(name, e.target.value)} id={id} name={name} value={value} class={classNameLocal} placeholder={placeholder} rows="3"></textarea>
 </div>

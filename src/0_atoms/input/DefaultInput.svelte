@@ -13,5 +13,5 @@ const classNameLocal = ['text-base appearance-none bg-primary-50 block border-0 
 
 <div data-blok-c={storyblokEditableData['data-blok-c']} data-blok-uid={storyblokEditableData['data-blok-uid']}>
     <label for={id} class="sr-only">{label}</label>
-    <input on:change={(e) => storeInput(name, e)} type={type} id={id} name={name} value={value} class={classNameLocal} placeholder={placeholder}>
+    <input on:change={(e) => storeInput(name, e.target.value)} type={type} id={id} name={name} value={value} class={classNameLocal} placeholder={placeholder}>
 </div>
